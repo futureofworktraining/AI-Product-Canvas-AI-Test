@@ -1,0 +1,114 @@
+Zbuduj aplikację zgodnie ze specyfikacją poniżej i załączonymi screenshotami. Użyj biblioteki Bootstrap do utworzenia UI. Aplikacja powinna być zapisana w jednym pliku HTML. Aplikacja powinna wyglądać podobnie do tej na załączonych screenshotach leżeli chodzi i wygląd i kolorystykę. Ważne! Implementuj wszystkie wymagane i opisane w specyfikacji funkcje w kodzie aplikacji. Nie używaj placeholderów. Zwróć cały działający kod. Nie używaj lokalnych bibliotek importuj biblioteki używając cdnjs.
+
+Nazwa Aplikacji: AI Product Canvas
+
+Język: Polski
+
+Opis Ogólny: Aplikacja "AI Product Canvas" jest narzędziem online, które pomaga w definiowaniu, planowaniu i opisywaniu projektów wykorzystujących sztuczną inteligencję (AI). Składa się z trzech głównych zakładek: "Definicja Rozwiązania," "Aspekty Biznesowe i Użytkownik," oraz "Aspekty Technologiczne." Każda zakładka zawiera pola tekstowe do wypełnienia, a także przyciski "Sugestia AI", które generują tekstowe podpowiedzi oparte na AI, wykorzystując wprowadzony Klucz API OpenAI. Aplikacja pozwala na zapisywanie projektów w formacie JSON i DOCX. Do każde kategorii powinno być przypisana ikonka. Przycisk Sugeruj AI powinien być na wysokości nagłówków. Zaimplementuj możliwość exportu do DOCX (Word). Wygląd dokumentu powinien przypominać ten złączony. Request o OpenAI powinien wyglądać następująco: SystemPrompt: Jesteś business analitykiem tworzącym specyfikację rozwiązania. Użytkownik poda Ci nazwę kategorii/obszar krzy ty uzupełnisz na podstawie dostarczonych Ci innych informacji. kategorię. Dobierz sugestię do tej kategorii zgodnie z załączonym kontekstem. Zwróć tylko i wyłącznie sugestię, bez dodatkowych komentarzy, przykładów lub kontekstu. Powinno być węźle. Formatka userPromot: Kategoria w dla której powinien utworzyć sugestie to: {nagłówek kategorii obok którego jest przycisz Sugestia AI} Kontekst: {Nazwa rozwiązania} {Treść pola tekstowego dla Nazwa rozwiązania} {Właściciel}: {Treść pola tekstowego dla Właściciel} itd. Aplikacja powinna jak najbardzie przypominać tą na załączonych screenshotach.
+
+Główne Funkcjonalności:
+
+Zakładki:
+
+Definicja Rozwiązania:
+
+Pola do wprowadzania podstawowych informacji o rozwiązaniu: "Nazwa rozwiązania", "Właściciel" i "Krótki opis rozwiązania".
+
+Przycisk "Sugestia AI" obok każdego pola do generowania podpowiedzi przez AI.
+
+Pole tekstowe "Klucz API OpenAI" do wprowadzania API key jako pole hasła (ukryta wartość).
+
+Przycisk "Test połączenia" do sprawdzania poprawności połączenia z API.
+
+Aspekty Biznesowe i Użytkownik:
+
+Sekcje opisujące "Problem i wartość biznesową", "Dane", "Użytkownicy", "Działanie rozwiązania i mierniki sukcesu".
+
+Przycisk "Sugestia AI" obok każdego nagłówka do danej kategorii do generowania podpowiedzi przez AI.
+
+Aspekty Technologiczne:
+
+Sekcje opisujące "Dane i modele", "Infrastruktura i bezpieczeństwo", "Interfejs użytkownika (UX)", "Rozwój aplikacji".
+
+Generowanie Podpowiedzi AI:
+W każdym polu tekstowym, obok etykiety i ikonki, znajduje się przycisk "Sugestia AI".
+Kliknięcie tego przycisku inicjuje zapytanie do OpenAI API za pomocą wprowadzonego "Klucz API OpenAI" i generuje tekstową sugestię.
+
+Zapisywanie i Eksport:
+
+Trzy przyciski na dole sekcji:
+"Wczytaj Kanwe" (Import Canva): Umożliwia zaimportowanie wcześniej zapisanej kanwy.
+"Zapisz Kanwę" (Save Canva): Umożliwia zapisanie wypełnionej kanwy jako plik JSON (canvas.data.json).
+"Zapisz jako DOCX" (Save as DOCX): Umożliwia zapisanie wypełnionej kanwy jako dokument DOCX.
+
+Walidacja:
+Pola tekstowe "Nazwa rozwiązania", "Właściciel", i "Krótki opis rozwiązania" są wymagane przed zapisaniem pliku, inaczej pojawi się alert.
+
+Wykorzystane API:
+OpenAI API (wymagany "Klucz API OpenAI" do generowania sugestii AI)
+
+Dodatkowe Uwagi:
+Interfejs aplikacji jest responsywny i dopasowuje się do różnych rozmiarów ekranu.
+Aplikacja oferuje zautomatyzowane generowanie tekstu AI do poszczególnych sekcji.
+Interfejs powinien być intuicyjny i łatwy w użyciu, zgodnie z celami projektu.
+
+Specyfikacja Techniczna (Doprecyzowanie):
+
+Wykorzystanie JavaScript:
+JavaScript jest używany do obsługi interakcji użytkownika, takich jak aktywacja sugestii AI.
+JavaScript wykorzystywany jest do pobierania i przetwarzania API klucza Open AI i komunikacji z API OpenAI.
+Nie używaj lokalnych bibliotek.
+Pamiętaj to imporcie zewnętrznych bibliotek z cdnjs lub podobnego repozytorium, ale nie używaj 'SHA-512 integrity'
+Implementuj wszystkie funkcjonalności i nie używaj placeholderów.
+Zaimplementuj funkcjonalność eksport-u do pliku Word.
+Do zapisywanie treści jako DOCX użyj przykładu poniżej.
+<Przykład DOCX>
+
+<html>
+  <head>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+  </head>
+  <body>
+    <h1>DOCX browser Word document generation</h1>
+    <button type="button" onclick="generate()">Click to generate document</button>
+    <script>
+      function generate() {
+        const doc = new docx.Document({
+          sections: [{
+            properties: {},
+            children: [
+              new docx.Paragraph({
+                children: [
+                  new docx.TextRun("Hello World"),
+                  new docx.TextRun({
+                    text: "Foo Bar",
+                    bold: true,
+                  }),
+                  new docx.TextRun({
+                    text: "\tGithub is the best",
+                    bold: true,
+                  }),
+                ],
+              }),
+            ],
+          }]
+        });
+        docx.Packer.toBlob(doc).then(blob => {
+          console.log(blob);
+          saveAs(blob, "example.docx");
+          console.log("Document created successfully");
+        });
+      }
+    </script>
+  </body>
+</html>
+Komunikacja z API OpenAI:
+Aplikacja wykorzystuje JavaScript do wykonywania zapytań API do OpenAI, przesyłając zapytanie tekstowe i Klucz API.
+Odpowiedź od API OpenAI jest następnie przetwarzana i wyświetlana w odpowiednim polu tekstowym.
+Użyj modelu LLM o nazwie "gpt-4o-mini".
+Interakcja z Użytkownikiem:
+JavaScript jest wykorzystywany do walidacji pól, wyświetlania komunikatów błędów.
+Komunikaty powinny być wyświetlane jako tzw. Toasts. Odpowiednio zformatowego w zależności czy komunikat jest błędzie czy tylko ma formę informacyjną.
+Poprawia responsywność interfejsu poprzez asynchroniczne ładowanie danych.
+Aplikacja powinna być jak najbardziej zbliżona wyglądem do tej z załączonych screenshot-ów.

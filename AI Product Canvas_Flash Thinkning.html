@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Product Canvas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .navbar {
+            background-color: #e0e7ff;
+        }
+        .navbar-brand {
+            color: #4c1d95;
+            font-weight: bold;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #c7d2fe;
+            border-color: #c7d2fe #c7d2fe #fff;
+            color: #4c1d95;
+        }
+        .nav-tabs .nav-link {
+            color: #4c1d95;
+        }
+        .card {
+            border: 1px solid #ced4da;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .card-header {
+            background-color: #e9ecef;
+            border-bottom: 1px solid #ced4da;
+            padding: 0.75rem 1.25rem;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 1.25rem;
+        }
+        .form-control {
+            border-radius: 0.25rem;
+        }
+        .btn-primary {
+            background-color: #6d28d9;
+            border-color: #6d28d9;
+        }
+        .btn-primary:hover {
+            background-color: #5b21b6;
+            border-color: #5b21b6;
+        }
+        .btn-ai-suggest {
+            background-color: #a78bfa;
+            border-color: #a78bfa;
+            color: white;
+        }
+        .btn-ai-suggest:hover {
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
+            color: white;
+        }
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
+        .toast-header {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .toast-body {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+        .icon-label {
+            margin-right: 0.5rem;
+        }
+         .input-group-append {
+            margin-left: 0.5rem; /* Adjust spacing as needed */
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">AI Product Canvas</a>
+    </div>
+</nav>
+
+<div class="container mt-3">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="definicja-tab" data-bs-toggle="tab" data-bs-target="#definicja" type="button" role="tab" aria-controls="definicja" aria-selected="true">Definicja Rozwiązania</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="biznes-tab" data-bs-toggle="tab" data-bs-target="#biznes" type="button" role="tab" aria-controls="biznes" aria-selected="false">Aspekty Biznesowe i Użytkownik</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="technologia-tab" data-bs-toggle="tab" data-bs-target="#technologia" type="button" role="tab" aria-controls="technologia" aria-selected="false">Aspekty Technologiczne</button>
+        </li>
+    </ul>
+    <div class="tab-content mt-2" id="myTabContent">
+
+        <!-- Definicja Rozwiązania -->
+        <div class="tab-pane fade show active" id="definicja" role="tabpanel" aria-labelledby="definicja-tab">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-lightbulb icon-label"></i> Podstawowe Informacje o rozwiązaniu</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="nazwaRozwiązania" class="form-label"><i class="fas fa-tag icon-label"></i> Nazwa rozwiązania</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="nazwaRozwiązania" data-category="Nazwa rozwiązania">Sugestia AI</button>
+                        </div>
+                        <input type="text" class="form-control" id="nazwaRozwiązania">
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="wlasciciel" class="form-label"><i class="fas fa-user icon-label"></i> Właściciel</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="wlasciciel" data-category="Właściciel">Sugestia AI</button>
+                        </div>
+                        <input type="text" class="form-control" id="wlasciciel">
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="opisRozwiązania" class="form-label"><i class="fas fa-file-alt icon-label"></i> Krótki opis rozwiązania</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="opisRozwiązania" data-category="Krótki opis rozwiązania">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="opisRozwiązania" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="openaiApiKey" class="form-label"><i class="fas fa-key icon-label"></i> Klucz API OpenAI</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="openaiApiKey">
+                            <button class="btn btn-outline-secondary" type="button" id="testPolaczenia">Test połączenia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aspekty Biznesowe i Użytkownik -->
+        <div class="tab-pane fade" id="biznes" role="tabpanel" aria-labelledby="biznes-tab">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-chart-bar icon-label"></i> Problem i wartość biznesowa</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="problemBiznesowy" class="form-label"><i class="fas fa-exclamation-triangle icon-label"></i> Problem biznesowy i oczekiwane rezultaty</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="problemBiznesowy" data-category="Problem biznesowy i oczekiwane rezultaty">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="problemBiznesowy" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="wartoscBiznesowa" class="form-label"><i class="fas fa-piggy-bank icon-label"></i> Wartość biznesowa</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="wartoscBiznesowa" data-category="Wartość biznesowa">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="wartoscBiznesowa" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="przeszkodyBiznesowe" class="form-label"><i class="fas fa-ban icon-label"></i> Możliwe przeszkody</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="przeszkodyBiznesowe" data-category="Możliwe przeszkody">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="przeszkodyBiznesowe" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-database icon-label"></i> Dane</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="daneBiznesowe" class="form-label"><i class="fas fa-table icon-label"></i> Źródła danych i jakość danych</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="daneBiznesowe" data-category="Źródła danych i jakość danych">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="daneBiznesowe" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="danePrzetwarzanie" class="form-label"><i class="fas fa-filter icon-label"></i> Przetwarzanie i analiza danych</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="danePrzetwarzanie" data-category="Przetwarzanie i analiza danych">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="danePrzetwarzanie" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-users icon-label"></i> Użytkownicy</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="uzytkownicyGrupy" class="form-label"><i class="fas fa-user-friends icon-label"></i> Grupy docelowe użytkowników</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="uzytkownicyGrupy" data-category="Grupy docelowe użytkowników">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="uzytkownicyGrupy" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="uzytkownicyPotrzeby" class="form-label"><i class="fas fa-comments icon-label"></i> Potrzeby i oczekiwania użytkowników</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="uzytkownicyPotrzeby" data-category="Potrzeby i oczekiwania użytkowników">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="uzytkownicyPotrzeby" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="uzytkownicyDoswiadczenie" class="form-label"><i class="fas fa-hand-pointer icon-label"></i> Doświadczenie użytkownika (UX)</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="uzytkownicyDoswiadczenie" data-category="Doświadczenie użytkownika (UX)">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="uzytkownicyDoswiadczenie" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-cogs icon-label"></i> Działanie rozwiązania i mierniki sukcesu</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="dzialanieRozwiazania" class="form-label"><i class="fas fa-play icon-label"></i> Sposób działania rozwiązania</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="dzialanieRozwiazania" data-category="Sposób działania rozwiązania">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="dzialanieRozwiazania" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="miernikiSukcesu" class="form-label"><i class="fas fa-tachometer-alt icon-label"></i> Mierniki sukcesu i KPI</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="miernikiSukcesu" data-category="Mierniki sukcesu i KPI">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="miernikiSukcesu" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="monitorowanieEfektywnosci" class="form-label"><i class="fas fa-chart-line icon-label"></i> Monitorowanie i raportowanie efektywności</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="monitorowanieEfektywnosci" data-category="Monitorowanie i raportowanie efektywności">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="monitorowanieEfektywnosci" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aspekty Technologiczne -->
+        <div class="tab-pane fade" id="technologia" role="tabpanel" aria-labelledby="technologia-tab">
+             <div class="card">
+                <div class="card-header"><i class="fas fa-brain icon-label"></i> Dane i modele</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="daneModeleRodzaje" class="form-label"><i class="fas fa-project-diagram icon-label"></i> Rodzaje danych i modeli AI</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="daneModeleRodzaje" data-category="Rodzaje danych i modeli AI">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="daneModeleRodzaje" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="daneModeleAlgorytmy" class="form-label"><i class="fas fa-code icon-label"></i> Algorytmy i metody uczenia</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="daneModeleAlgorytmy" data-category="Algorytmy i metody uczenia">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="daneModeleAlgorytmy" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="daneModeleWalidacja" class="form-label"><i class="fas fa-check-double icon-label"></i> Walidacja i testowanie modeli</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="daneModeleWalidacja" data-category="Walidacja i testowanie modeli">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="daneModeleWalidacja" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-server icon-label"></i> Infrastruktura i bezpieczeństwo</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="infrastrukturaSrodowisko" class="form-label"><i class="fas fa-cloud icon-label"></i> Środowisko wdrażania (chmura, lokalnie)</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="infrastrukturaSrodowisko" data-category="Środowisko wdrażania (chmura, lokalnie)">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="infrastrukturaSrodowisko" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="infrastrukturaSkalowalnosc" class="form-label"><i class="fas fa-arrows-alt-h icon-label"></i> Skalowalność i wydajność infrastruktury</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="infrastrukturaSkalowalnosc" data-category="Skalowalność i wydajność infrastruktury">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="infrastrukturaSkalowalnosc" rows="3"></textarea>
+                    </div>
+                     <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="infrastrukturaBezpieczenstwo" class="form-label"><i class="fas fa-shield-alt icon-label"></i> Bezpieczeństwo danych i systemów</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="infrastrukturaBezpieczenstwo" data-category="Bezpieczeństwo danych i systemów">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="infrastrukturaBezpieczenstwo" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-desktop icon-label"></i> Interfejs użytkownika (UX)</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="uxProjektowanie" class="form-label"><i class="fas fa-pencil-ruler icon-label"></i> Projektowanie interfejsu i doświadczenia UX</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="uxProjektowanie" data-category="Projektowanie interfejsu i doświadczenia UX">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="uxProjektowanie" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="uxDostepnosc" class="form-label"><i class="fas fa-universal-access icon-label"></i> Dostępność i responsywność interfejsu</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="uxDostepnosc" data-category="Dostępność i responsywność interfejsu">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="uxDostepnosc" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-header"><i class="fas fa-rocket icon-label"></i> Rozwój aplikacji</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="rozwojTechnologie" class="form-label"><i class="fas fa-laptop-code icon-label"></i> Technologie i narzędzia programistyczne</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="rozwojTechnologie" data-category="Technologie i narzędzia programistyczne">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="rozwojTechnologie" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="rozwojProces" class="form-label"><i class="fas fa-tasks icon-label"></i> Proces rozwoju i wdrażania</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="rozwojProces" data-category="Proces rozwoju i wdrażania">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="rozwojProces" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="rozwojUtrzymanie" class="form-label"><i class="fas fa-wrench icon-label"></i> Utrzymanie i aktualizacje aplikacji</label>
+                            <button type="button" class="btn btn-ai-suggest btn-sm suggest-ai-btn" data-target-field="rozwojUtrzymanie" data-category="Utrzymanie i aktualizacje aplikacji">Sugestia AI</button>
+                        </div>
+                        <textarea class="form-control" id="rozwojUtrzymanie" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex justify-content-start">
+        <button type="button" class="btn btn-secondary me-2" id="wczytajKanwe">Wczytaj Kanwe</button>
+        <button type="button" class="btn btn-primary me-2" id="zapiszKanwe">Zapisz Kanwe</button>
+        <button type="button" class="btn btn-primary" id="zapiszDocx">Zapisz jako DOCX</button>
+    </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toast-message" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto toast-title">Komunikat</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body toast-body-content">
+           <!-- Toast body content here -->
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+
+<script>
+    const apiKey = document.getElementById('openaiApiKey');
+    const toastEl = document.getElementById('toast-message');
+    const toastBody = document.querySelector('.toast-body-content');
+    const toastTitle = document.querySelector('.toast-title');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastEl);
+
+
+    function showToast(message, isError = false, title = 'Komunikat') {
+        toastTitle.textContent = title;
+        toastBody.textContent = message;
+        if (isError) {
+            toastEl.classList.remove('text-bg-success');
+            toastEl.classList.add('text-bg-danger');
+        } else {
+            toastEl.classList.remove('text-bg-danger');
+            toastEl.classList.add('text-bg-success');
+        }
+        toastBootstrap.show();
+    }
+
+
+    document.getElementById('testPolaczenia').addEventListener('click', async () => {
+        if (!apiKey.value) {
+            showToast('Klucz API OpenAI jest wymagany.', true, 'Błąd');
+            return;
+        }
+        try {
+            const suggestion = await getAiSuggestion("Test połączenia", "Sprawdzenie połączenia", {}, apiKey.value);
+            if (suggestion) {
+                showToast('Połączenie z OpenAI pomyślne.', false, 'Sukces');
+            } else {
+                showToast('Nie udało się przetestować połączenia.', true, 'Błąd');
+            }
+
+        } catch (error) {
+            console.error("Błąd testowania połączenia:", error);
+            showToast('Błąd połączenia z OpenAI.', true, 'Błąd');
+        }
+    });
+
+
+    document.querySelectorAll('.suggest-ai-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const targetFieldId = button.dataset.targetField;
+            const category = button.dataset.category;
+            const targetField = document.getElementById(targetFieldId);
+
+            if (!apiKey.value) {
+                showToast('Klucz API OpenAI jest wymagany.', true, 'Błąd');
+                return;
+            }
+
+            const solutionName = document.getElementById('nazwaRozwiązania').value;
+            const owner = document.getElementById('wlasciciel').value;
+            const solutionDescription = document.getElementById('opisRozwiązania').value;
+            const problemBiznesowy = document.getElementById('problemBiznesowy').value;
+            const wartoscBiznesowa = document.getElementById('wartoscBiznesowa').value;
+            const przeszkodyBiznesowe = document.getElementById('przeszkodyBiznesowe').value;
+            const daneBiznesowe = document.getElementById('daneBiznesowe').value;
+            const danePrzetwarzanie = document.getElementById('danePrzetwarzanie').value;
+            const uzytkownicyGrupy = document.getElementById('uzytkownicyGrupy').value;
+            const uzytkownicyPotrzeby = document.getElementById('uzytkownicyPotrzeby').value;
+            const uzytkownicyDoswiadczenie = document.getElementById('uzytkownicyDoswiadczenie').value;
+            const dzialanieRozwiazania = document.getElementById('dzialanieRozwiazania').value;
+            const miernikiSukcesu = document.getElementById('miernikiSukcesu').value;
+            const monitorowanieEfektywnosci = document.getElementById('monitorowanieEfektywnosci').value;
+            const daneModeleRodzaje = document.getElementById('daneModeleRodzaje').value;
+            const daneModeleAlgorytmy = document.getElementById('daneModeleAlgorytmy').value;
+            const daneModeleWalidacja = document.getElementById('daneModeleWalidacja').value;
+            const infrastrukturaSrodowisko = document.getElementById('infrastrukturaSrodowisko').value;
+            const infrastrukturaSkalowalnosc = document.getElementById('infrastrukturaSkalowalnosc').value;
+            const infrastrukturaBezpieczenstwo = document.getElementById('infrastrukturaBezpieczenstwo').value;
+            const uxProjektowanie = document.getElementById('uxProjektowanie').value;
+            const uxDostepnosc = document.getElementById('uxDostepnosc').value;
+            const rozwojTechnologie = document.getElementById('rozwojTechnologie').value;
+            const rozwojProces = document.getElementById('rozwojProces').value;
+            const rozwojUtrzymanie = document.getElementById('rozwojUtrzymanie').value;
+
+
+            const contextData = {
+                'Nazwa rozwiązania': solutionName,
+                'Opis': solutionDescription,
+                'Właściciel': owner,
+                'Problem biznesowy i oczekiwane rezultaty': problemBiznesowy,
+                'Wartość biznesowa': wartoscBiznesowa,
+                'Możliwe przeszkody': przeszkodyBiznesowe,
+                'Źródła danych i jakość danych': daneBiznesowe,
+                'Przetwarzanie i analiza danych': danePrzetwarzanie,
+                'Grupy docelowe użytkowników': uzytkownicyGrupy,
+                'Potrzeby i oczekiwania użytkowników': uzytkownicyPotrzeby,
+                'Doświadczenie użytkownika (UX)': uzytkownicyDoswiadczenie,
+                'Sposób działania rozwiązania': dzialanieRozwiazania,
+                'Mierniki sukcesu i KPI': miernikiSukcesu,
+                'Monitorowanie i raportowanie efektywności': monitorowanieEfektywnosci,
+                'Rodzaje danych i modeli AI': daneModeleRodzaje,
+                'Algorytmy i metody uczenia': daneModeleAlgorytmy,
+                'Walidacja i testowanie modeli': daneModeleWalidacja,
+                'Środowisko wdrażania (chmura, lokalnie)': infrastrukturaSrodowisko,
+                'Skalowalność i wydajność infrastruktury': infrastrukturaSkalowalnosc,
+                'Bezpieczeństwo danych i systemów': infrastrukturaBezpieczenstwo,
+                'Projektowanie interfejsu i doświadczenia UX': uxProjektowanie,
+                'Dostępność i responsywność interfejsu': uxDostepnosc,
+                'Technologie i narzędzia programistyczne': rozwojTechnologie,
+                'Proces rozwoju i wdrażania': rozwojProces,
+                'Utrzymanie i aktualizacje aplikacji': rozwojUtrzymanie
+            };
+
+            try {
+                const suggestion = await getAiSuggestion(category, category, contextData, apiKey.value);
+                targetField.value = suggestion;
+            } catch (error) {
+                console.error("Błąd generowania sugestii AI:", error);
+                showToast('Błąd generowania sugestii AI.', true, 'Błąd');
+            }
+        });
+    });
+
+    async function getAiSuggestion(category, promptCategory, contextData, apiKey) {
+        const systemPrompt = `Jesteś business analitykiem tworzącym specyfikację rozwiązania. Użytkownik poda Ci nazwę kategorii/obszar krzy ty uzupełnisz na podstawie dostarczonych Ci innych informacji. kategorię. Dobierz sugestię do tej kategorii zgodnie z załączonym kontekstem. Zwróć tylko i wyłącznie sugestię, bez dodatkowych komentarzy, przykładów lub kontekstu. Powinno być węźle.`;
+        const userPrompt = `Kategoria w dla której powinien utworzyć sugestie to: ${promptCategory} Kontekst: Nazwa rozwiązania: ${contextData['Nazwa rozwiązania']} Opis: ${contextData['Opis']} Właściciel: ${contextData['Właściciel']} Problem biznesowy i oczekiwane rezultaty: ${contextData['Problem biznesowy i oczekiwane rezultaty']} Wartość biznesowa: ${contextData['Wartość biznesowa']} Możliwe przeszkody: ${contextData['Możliwe przeszkody']} Źródła danych i jakość danych: ${contextData['Źródła danych i jakość danych']} Przetwarzanie i analiza danych: ${contextData['Przetwarzanie i analiza danych']} Grupy docelowe użytkowników: ${contextData['Grupy docelowe użytkowników']} Potrzeby i oczekiwania użytkowników: ${contextData['Potrzeby i oczekiwania użytkowników']} Doświadczenie użytkownika (UX): ${contextData['Doświadczenie użytkownika (UX)']} Sposób działania rozwiązania: ${contextData['Sposób działania rozwiązania']} Mierniki sukcesu i KPI: ${contextData['Mierniki sukcesu i KPI']} Monitorowanie i raportowanie efektywności: ${contextData['Monitorowanie i raportowanie efektywności']} Rodzaje danych i modeli AI: ${contextData['Rodzaje danych i modeli AI']} Algorytmy i metody uczenia: ${contextData['Algorytmy i metody uczenia']} Walidacja i testowanie modeli: ${contextData['Walidacja i testowanie modeli']} Środowisko wdrażania (chmura, lokalnie): ${contextData['Środowisko wdrażania (chmura, lokalnie)']} Skalowalność i wydajność infrastruktury: ${contextData['Skalowalność i wydajność infrastruktury']} Bezpieczeństwo danych i systemów: ${contextData['Bezpieczeństwo danych i systemów']} Projektowanie interfejsu i doświadczenia UX: ${contextData['Projektowanie interfejsu i doświadczenia UX']} Dostępność i responsywność interfejsu: ${contextData['Dostępność i responsywność interfejsu']} Technologie i narzędzia programistyczne: ${contextData['Technologie i narzędzia programistyczne']} Proces rozwoju i wdrażania: ${contextData['Proces rozwoju i wdrażania']} Utrzymanie i aktualizacje aplikacji: ${contextData['Utrzymanie i aktualizacje aplikacji']}`;
+
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: "gpt-4o-mini",
+                messages: [
+                    {"role": "system", "content": systemPrompt},
+                    {"role": "user", "content": userPrompt}
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`OpenAI API request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+    }
+
+
+    document.getElementById('zapiszKanwe').addEventListener('click', () => {
+        const nazwaRozwiązania = document.getElementById('nazwaRozwiązania').value;
+        const wlasciciel = document.getElementById('wlasciciel').value;
+        const opisRozwiązania = document.getElementById('opisRozwiązania').value;
+
+        if (!nazwaRozwiązania || !wlasciciel || !opisRozwiązania) {
+            showToast('Nazwa rozwiązania, Właściciel i Krótki opis rozwiązania są wymagane.', true, 'Błąd');
+            return;
+        }
+
+        const canvasData = {
+            definicjaRozwiązania: {
+                nazwaRozwiązania: nazwaRozwiązania,
+                wlasciciel: wlasciciel,
+                opisRozwiązania: opisRozwiązania
+            },
+            aspektyBiznesoweIUzytkownik: {
+                problemBiznesowy: document.getElementById('problemBiznesowy').value,
+                wartoscBiznesowa: document.getElementById('wartoscBiznesowa').value,
+                przeszkodyBiznesowe: document.getElementById('przeszkodyBiznesowe').value,
+                daneBiznesowe: document.getElementById('daneBiznesowe').value,
+                danePrzetwarzanie: document.getElementById('danePrzetwarzanie').value,
+                uzytkownicyGrupy: document.getElementById('uzytkownicyGrupy').value,
+                uzytkownicyPotrzeby: document.getElementById('uzytkownicyPotrzeby').value,
+                uzytkownicyDoswiadczenie: document.getElementById('uzytkownicyDoswiadczenie').value,
+                dzialanieRozwiazania: document.getElementById('dzialanieRozwiazania').value,
+                miernikiSukcesu: document.getElementById('miernikiSukcesu').value,
+                monitorowanieEfektywnosci: document.getElementById('monitorowanieEfektywnosci').value
+            },
+            aspektyTechnologiczne: {
+                daneModeleRodzaje: document.getElementById('daneModeleRodzaje').value,
+                daneModeleAlgorytmy: document.getElementById('daneModeleAlgorytmy').value,
+                daneModeleWalidacja: document.getElementById('daneModeleWalidacja').value,
+                infrastrukturaSrodowisko: document.getElementById('infrastrukturaSrodowisko').value,
+                infrastrukturaSkalowalnosc: document.getElementById('infrastrukturaSkalowalnosc').value,
+                infrastrukturaBezpieczenstwo: document.getElementById('infrastrukturaBezpieczenstwo').value,
+                uxProjektowanie: document.getElementById('uxProjektowanie').value,
+                uxDostepnosc: document.getElementById('uxDostepnosc').value,
+                rozwojTechnologie: document.getElementById('rozwojTechnologie').value,
+                rozwojProces: document.getElementById('rozwojProces').value,
+                rozwojUtrzymanie: document.getElementById('rozwojUtrzymanie').value
+            }
+        };
+
+        const jsonString = JSON.stringify(canvasData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        saveAs(blob, 'canvas.data.json');
+        showToast('Kanwa zapisana do pliku canvas.data.json', false, 'Sukces');
+    });
+
+    document.getElementById('wczytajKanwe').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const canvasData = JSON.parse(event.target.result);
+                    document.getElementById('nazwaRozwiązania').value = canvasData.definicjaRozwiązania.nazwaRozwiązania || '';
+                    document.getElementById('wlasciciel').value = canvasData.definicjaRozwiązania.wlasciciel || '';
+                    document.getElementById('opisRozwiązania').value = canvasData.definicjaRozwiązania.opisRozwiązania || '';
+
+                    document.getElementById('problemBiznesowy').value = canvasData.aspektyBiznesoweIUzytkownik.problemBiznesowy || '';
+                    document.getElementById('wartoscBiznesowa').value = canvasData.aspektyBiznesoweIUzytkownik.wartoscBiznesowa || '';
+                    document.getElementById('przeszkodyBiznesowe').value = canvasData.aspektyBiznesoweIUzytkownik.przeszkodyBiznesowe || '';
+                    document.getElementById('daneBiznesowe').value = canvasData.aspektyBiznesoweIUzytkownik.daneBiznesowe || '';
+                    document.getElementById('danePrzetwarzanie').value = canvasData.aspektyBiznesoweIUzytkownik.danePrzetwarzanie || '';
+                    document.getElementById('uzytkownicyGrupy').value = canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyGrupy || '';
+                    document.getElementById('uzytkownicyPotrzeby').value = canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyPotrzeby || '';
+                    document.getElementById('uzytkownicyDoswiadczenie').value = canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyDoswiadczenie || '';
+                    document.getElementById('dzialanieRozwiazania').value = canvasData.aspektyBiznesoweIUzytkownik.dzialanieRozwiazania || '';
+                    document.getElementById('miernikiSukcesu').value = canvasData.aspektyBiznesoweIUzytkownik.miernikiSukcesu || '';
+                    document.getElementById('monitorowanieEfektywnosci').value = canvasData.aspektyBiznesoweIUzytkownik.monitorowanieEfektywnosci || '';
+
+                    document.getElementById('daneModeleRodzaje').value = canvasData.aspektyTechnologiczne.daneModeleRodzaje || '';
+                    document.getElementById('daneModeleAlgorytmy').value = canvasData.aspektyTechnologiczne.daneModeleAlgorytmy || '';
+                    document.getElementById('daneModeleWalidacja').value = canvasData.aspektyTechnologiczne.daneModeleWalidacja || '';
+                    document.getElementById('infrastrukturaSrodowisko').value = canvasData.aspektyTechnologiczne.infrastrukturaSrodowisko || '';
+                    document.getElementById('infrastrukturaSkalowalnosc').value = canvasData.aspektyTechnologiczne.infrastrukturaSkalowalnosc || '';
+                    document.getElementById('infrastrukturaBezpieczenstwo').value = canvasData.aspektyTechnologiczne.infrastrukturaBezpieczenstwo || '';
+                    document.getElementById('uxProjektowanie').value = canvasData.aspektyTechnologiczne.uxProjektowanie || '';
+                    document.getElementById('uxDostepnosc').value = canvasData.aspektyTechnologiczne.uxDostepnosc || '';
+                    document.getElementById('rozwojTechnologie').value = canvasData.aspektyTechnologiczne.rozwojTechnologie || '';
+                    document.getElementById('rozwojProces').value = canvasData.aspektyTechnologiczne.rozwojProces || '';
+                    document.getElementById('rozwojUtrzymanie').value = canvasData.aspektyTechnologiczne.rozwojUtrzymanie || '';
+
+                    showToast('Kanwa wczytana z pliku.', false, 'Sukces');
+
+                } catch (error) {
+                    console.error("Błąd wczytywania pliku JSON:", error);
+                    showToast('Błąd wczytywania pliku kanwy.', true, 'Błąd');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    });
+
+
+    document.getElementById('zapiszDocx').addEventListener('click', () => {
+        const nazwaRozwiązania = document.getElementById('nazwaRozwiązania').value;
+        const wlasciciel = document.getElementById('wlasciciel').value;
+        const opisRozwiązania = document.getElementById('opisRozwiązania').value;
+
+         if (!nazwaRozwiązania || !wlasciciel || !opisRozwiązania) {
+            showToast('Nazwa rozwiązania, Właściciel i Krótki opis rozwiązania są wymagane.', true, 'Błąd');
+            return;
+        }
+
+        const canvasData = {
+            definicjaRozwiązania: {
+                nazwaRozwiązania: nazwaRozwiązania,
+                wlasciciel: wlasciciel,
+                opisRozwiązania: opisRozwiązania
+            },
+            aspektyBiznesoweIUzytkownik: {
+                problemBiznesowy: document.getElementById('problemBiznesowy').value,
+                wartoscBiznesowa: document.getElementById('wartoscBiznesowa').value,
+                przeszkodyBiznesowe: document.getElementById('przeszkodyBiznesowe').value,
+                daneBiznesowe: document.getElementById('daneBiznesowe').value,
+                danePrzetwarzanie: document.getElementById('danePrzetwarzanie').value,
+                uzytkownicyGrupy: document.getElementById('uzytkownicyGrupy').value,
+                uzytkownicyPotrzeby: document.getElementById('uzytkownicyPotrzeby').value,
+                uzytkownicyDoswiadczenie: document.getElementById('uzytkownicyDoswiadczenie').value,
+                dzialanieRozwiazania: document.getElementById('dzialanieRozwiazania').value,
+                miernikiSukcesu: document.getElementById('miernikiSukcesu').value,
+                monitorowanieEfektywnosci: document.getElementById('monitorowanieEfektywnosci').value
+            },
+            aspektyTechnologiczne: {
+                daneModeleRodzaje: document.getElementById('daneModeleRodzaje').value,
+                daneModeleAlgorytmy: document.getElementById('daneModeleAlgorytmy').value,
+                daneModeleWalidacja: document.getElementById('daneModeleWalidacja').value,
+                infrastrukturaSrodowisko: document.getElementById('infrastrukturaSrodowisko').value,
+                infrastrukturaSkalowalnosc: document.getElementById('infrastrukturaSkalowalnosc').value,
+                infrastrukturaBezpieczenstwo: document.getElementById('infrastrukturaBezpieczenstwo').value,
+                uxProjektowanie: document.getElementById('uxProjektowanie').value,
+                uxDostepnosc: document.getElementById('uxDostepnosc').value,
+                rozwojTechnologie: document.getElementById('rozwojTechnologie').value,
+                rozwojProces: document.getElementById('rozwojProces').value,
+                rozwojUtrzymanie: document.getElementById('rozwojUtrzymanie').value
+            }
+        };
+
+
+        const doc = new docx.Document({
+            sections: [{
+                properties: {},
+                children: [
+                    new docx.Paragraph({
+                        text: "AI Product Canvas",
+                        heading: docx.HeadingLevel.H1
+                    }),
+                    new docx.Paragraph({
+                        text: "Definicja Rozwiązania",
+                        heading: docx.HeadingLevel.H2
+                    }),
+                    new docx.Paragraph({
+                        text: `Nazwa rozwiązania: ${canvasData.definicjaRozwiązania.nazwaRozwiązania}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Właściciel: ${canvasData.definicjaRozwiązania.wlasciciel}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Krótki opis rozwiązania: ${canvasData.definicjaRozwiązania.opisRozwiązania}`
+                    }),
+
+                    new docx.Paragraph({
+                        text: "Aspekty Biznesowe i Użytkownik",
+                        heading: docx.HeadingLevel.H2
+                    }),
+                    new docx.Paragraph({
+                        text: "Problem i wartość biznesowa",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Problem biznesowy i oczekiwane rezultaty: ${canvasData.aspektyBiznesoweIUzytkownik.problemBiznesowy}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Wartość biznesowa: ${canvasData.aspektyBiznesoweIUzytkownik.wartoscBiznesowa}`
+                    }),
+                     new docx.Paragraph({
+                        text: `Możliwe przeszkody: ${canvasData.aspektyBiznesoweIUzytkownik.przeszkodyBiznesowe}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Dane",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Źródła danych i jakość danych: ${canvasData.aspektyBiznesoweIUzytkownik.daneBiznesowe}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Przetwarzanie i analiza danych: ${canvasData.aspektyBiznesoweIUzytkownik.danePrzetwarzanie}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Użytkownicy",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Grupy docelowe użytkowników: ${canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyGrupy}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Potrzeby i oczekiwania użytkowników: ${canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyPotrzeby}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Doświadczenie użytkownika (UX): ${canvasData.aspektyBiznesoweIUzytkownik.uzytkownicyDoswiadczenie}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Działanie rozwiązania i mierniki sukcesu",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Sposób działania rozwiązania: ${canvasData.aspektyBiznesoweIUzytkownik.dzialanieRozwiazania}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Mierniki sukcesu i KPI: ${canvasData.aspektyBiznesoweIUzytkownik.miernikiSukcesu}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Monitorowanie i raportowanie efektywności: ${canvasData.aspektyBiznesoweIUzytkownik.monitorowanieEfektywnosci}`
+                    }),
+
+
+                    new docx.Paragraph({
+                        text: "Aspekty Technologiczne",
+                        heading: docx.HeadingLevel.H2
+                    }),
+                    new docx.Paragraph({
+                        text: "Dane i modele",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Rodzaje danych i modeli AI: ${canvasData.aspektyTechnologiczne.daneModeleRodzaje}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Algorytmy i metody uczenia: ${canvasData.aspektyTechnologiczne.daneModeleAlgorytmy}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Walidacja i testowanie modeli: ${canvasData.aspektyTechnologiczne.daneModeleWalidacja}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Infrastruktura i bezpieczeństwo",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Środowisko wdrażania (chmura, lokalnie): ${canvasData.aspektyTechnologiczne.infrastrukturaSrodowisko}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Skalowalność i wydajność infrastruktury: ${canvasData.aspektyTechnologiczne.infrastrukturaSkalowalnosc}`
+                    }),
+                     new docx.Paragraph({
+                        text: `Bezpieczeństwo danych i systemów: ${canvasData.aspektyTechnologiczne.infrastrukturaBezpieczenstwo}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Interfejs użytkownika (UX)",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Projektowanie interfejsu i doświadczenia UX: ${canvasData.aspektyTechnologiczne.uxProjektowanie}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Dostępność i responsywność interfejsu: ${canvasData.aspektyTechnologiczne.uxDostepnosc}`
+                    }),
+                    new docx.Paragraph({
+                        text: "Rozwój aplikacji",
+                        heading: docx.HeadingLevel.H3
+                    }),
+                    new docx.Paragraph({
+                        text: `Technologie i narzędzia programistyczne: ${canvasData.aspektyTechnologiczne.rozwojTechnologie}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Proces rozwoju i wdrażania: ${canvasData.aspektyTechnologiczne.rozwojProces}`
+                    }),
+                    new docx.Paragraph({
+                        text: `Utrzymanie i aktualizacje aplikacji: ${canvasData.aspektyTechnologiczne.rozwojUtrzymanie}`
+                    }),
+                ],
+            }]
+        });
+
+        docx.Packer.toBlob(doc).then(blob => {
+            saveAs(blob, "ai_product_canvas.docx");
+            showToast('Kanwa zapisana do pliku ai_product_canvas.docx', false, 'Sukces');
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

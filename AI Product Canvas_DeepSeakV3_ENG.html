@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Product Canvas</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Toastr CSS for notifications -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+  <style>
+    .nav-link.active { font-weight: bold; }
+    .ai-suggestion-btn { margin-left: 10px; }
+    .required-field { border: 1px solid red; }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">AI Product Canvas</h1>
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="canvasTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="solution-definition-tab" data-bs-toggle="tab" data-bs-target="#solution-definition" type="button" role="tab">Definicja rozwiązania</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="business-aspects-tab" data-bs-toggle="tab" data-bs-target="#business-aspects" type="button" role="tab">Aspekty biznesowe i użytkownika</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="technological-aspects-tab" data-bs-toggle="tab" data-bs-target="#technological-aspects" type="button" role="tab">Aspekty technologiczne</button>
+      </li>
+    </ul>
+    <!-- Tab Content -->
+    <div class="tab-content mt-3" id="canvasTabsContent">
+      <!-- Solution Definition Tab -->
+      <div class="tab-pane fade show active" id="solution-definition" role="tabpanel">
+        <div class="mb-3">
+          <label for="solutionName" class="form-label">Nazwa rozwiązania <span class="text-danger">*</span></label>
+          <button class="btn btn-sm btn-outline-primary ai-suggestion-btn" onclick="generateAISuggestion('solutionName')">Sugestia AI</button>
+          <input type="text" class="form-control" id="solutionName" required>
+        </div>
+        <div class="mb-3">
+          <label for="owner" class="form-label">Właściciel <span class="text-danger">*</span></label>
+          <button class="btn btn-sm btn-outline-primary ai-suggestion-btn" onclick="generateAISuggestion('owner')">Sugestia AI</button>
+          <input type="text" class="form-control" id="owner" required>
+        </div>
+        <div class="mb-3">
+          <label for="shortDescription" class="form-label">Krótki opis rozwiązania <span class="text-danger">*</span></label>
+          <button class="btn btn-sm btn-outline-primary ai-suggestion-btn" onclick="generateAISuggestion('shortDescription')">Sugestia AI</button>
+          <textarea class="form-control" id="shortDescription" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="openaiApiKey" class="form-label">OpenAI API Key</label>
+          <input type="password" class="form-control" id="openaiApiKey">
+          <button class="btn btn-sm btn-outline-secondary mt-2" onclick="testApiConnection()">Testuj połączenie</button>
+        </div>
+      </div>
+      <!-- Business and User Aspects Tab -->
+      <div class="tab-pane fade" id="business-aspects" role="tabpanel">
+        <!-- Add fields for Business and User Aspects here -->
+      </div>
+      <!-- Technological Aspects Tab -->
+      <div class="tab-pane fade" id="technological-aspects" role="tabpanel">
+        <!-- Add fields for Technological Aspects here -->
+      </div>
+    </div>
+    <!-- Save and Export Buttons -->
+    <div class="mt-4">
+      <button class="btn btn-primary" onclick="loadCanvas()">Wczytaj Kanwę</button>
+      <button class="btn btn-success" onclick="saveCanvas()">Zapisz Kanwę</button>
+      <button class="btn btn-warning" onclick="exportToDocx()">Zapisz jako DOCX</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- Toastr JS for notifications -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <!-- Docx and FileSaver for exporting to DOCX -->
+  <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+  <script>
+    // Function to generate AI suggestions
+    async function generateAISuggestion(fieldId) {
+      const apiKey = document.getElementById('openaiApiKey').value;
+      if (!apiKey) {
+        toastr.error('Proszę wprowadzić OpenAI API Key.');
+        return;
+      }
+
+      const fieldLabel = document.querySelector(`label[for="${fieldId}"]`).innerText.replace(' *', '');
+      const context = {
+        solutionName: document.getElementById('solutionName').value,
+        owner: document.getElementById('owner').value,
+        shortDescription: document.getElementById('shortDescription').value,
+      };
+
+      const prompt = `Kategoria, dla której należy utworzyć sugestię, to: ${fieldLabel}\nKontekst: ${JSON.stringify(context)}`;
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            prompt: prompt,
+            max_tokens: 100,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.choices && data.choices.length > 0) {
+          document.getElementById(fieldId).value = data.choices[0].text.trim();
+        } else {
+          toastr.error('Błąd podczas generowania sugestii.');
+        }
+      } catch (error) {
+        toastr.error('Błąd połączenia z OpenAI API.');
+      }
+    }
+
+    // Function to test API connection
+    async function testApiConnection() {
+      const apiKey = document.getElementById('openaiApiKey').value;
+      if (!apiKey) {
+        toastr.error('Proszę wprowadzić OpenAI API Key.');
+        return;
+      }
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/models', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+          },
+        });
+
+        if (response.ok) {
+          toastr.success('Połączenie z OpenAI API udane.');
+        } else {
+          toastr.error('Błąd połączenia z OpenAI API.');
+        }
+      } catch (error) {
+        toastr.error('Błąd połączenia z OpenAI API.');
+      }
+    }
+
+    // Function to save canvas as JSON
+    function saveCanvas() {
+      const canvasData = {
+        solutionName: document.getElementById('solutionName').value,
+        owner: document.getElementById('owner').value,
+        shortDescription: document.getElementById('shortDescription').value,
+      };
+
+      const blob = new Blob([JSON.stringify(canvasData, null, 2)], { type: 'application/json' });
+      saveAs(blob, 'canvas.data.json');
+      toastr.success('Kanwa zapisana jako JSON.');
+    }
+
+    // Function to load canvas from JSON
+    function loadCanvas() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = JSON.parse(e.target.result);
+          document.getElementById('solutionName').value = data.solutionName || '';
+          document.getElementById('owner').value = data.owner || '';
+          document.getElementById('shortDescription').value = data.shortDescription || '';
+          toastr.success('Kanwa wczytana pomyślnie.');
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    // Function to export canvas as DOCX
+    function exportToDocx() {
+      const doc = new docx.Document({
+        sections: [{
+          properties: {},
+          children: [
+            new docx.Paragraph({
+              children: [new docx.TextRun('AI Product Canvas')],
+            }),
+            new docx.Paragraph({
+              children: [new docx.TextRun(`Nazwa rozwiązania: ${document.getElementById('solutionName').value}`)],
+            }),
+            new docx.Paragraph({
+              children: [new docx.TextRun(`Właściciel: ${document.getElementById('owner').value}`)],
+            }),
+            new docx.Paragraph({
+              children: [new docx.TextRun(`Krótki opis rozwiązania: ${document.getElementById('shortDescription').value}`)],
+            }),
+          ],
+        }],
+      });
+
+      docx.Packer.toBlob(doc).then(blob => {
+        saveAs(blob, 'AI_Product_Canvas.docx');
+        toastr.success('Dokument DOCX wygenerowany pomyślnie.');
+      });
+    }
+  </script>
+</body>
+</html>
