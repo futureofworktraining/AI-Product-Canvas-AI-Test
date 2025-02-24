@@ -1,0 +1,41 @@
+Build the application according to the specification below and the attached screenshots. Use the Bootstrap library to create the UI. The application must be contained in a single HTML file. The application should look similar to the one in the attached screenshots, both in terms of design and color scheme. Important! Implement all required and described functions from the specification in the application code. Do not use placeholders. Return the complete working code. Do not use local libraries; import libraries using cdnjs.
+
+Application Name: AI Product Canvas
+
+Language: English
+
+General Description: The "AI Product Canvas" application is an online tool that helps in defining, planning, and describing projects that use artificial intelligence (AI). It consists of three main tabs: "Solution Definition," "Business and User Aspects," and "Technological Aspects." Each tab contains text fields for input, as well as "AI Suggestion" buttons that generate text suggestions based on AI, using the provided OpenAI API Key. The application allows projects to be saved in JSON and DOCX formats. Each category should have an assigned icon. The AI Suggestion button should be aligned with the headers. Implement the ability to export to DOCX (Word). The appearance of the document should resemble the attached example.
+
+Request to OpenAI should look as follows: SystemPrompt: You are a business analyst creating a solution specification. The user will provide the name of the category/area for which you will fill in based on other provided information. Match the suggestion to that category according to the attached context. Return only and exclusively the suggestion, without additional comments, examples, or context. It should be concise. UserPrompt format: The category for which an AI suggestion should be created is: {header of the category next to which there is an AI Suggestion button} Context: {Solution Name} {Text field content for Solution Name} {Owner}: {Text field content for Owner} etc. The application should resemble the one in the attached screenshots as much as possible.
+
+Main Functionalities:
+
+Tabs:
+
+Solution Definition: • Input fields for entering basic information about the solution: "Solution Name", "Owner", and "Short Description of the Solution". • "AI Suggestion" button next to each field to generate suggestions via AI. • "OpenAI API Key" text field for entering the API key as a password field (hidden value). • "Test Connection" button to verify the connection with the API.
+
+Business and User Aspects: • Sections describing "Problem and Business Value", "Data", "Users", "Solution Operation and Success Metrics". • "AI Suggestion" button next to each header for the given category to generate suggestions via AI.
+
+Technological Aspects: • Sections describing "Data and Models", "Infrastructure and Security", "User Interface (UX)", "Application Development".
+
+Generating AI Suggestions: • In each text field, next to the label and icon, there is an "AI Suggestion" button. • Clicking this button initiates a request to the OpenAI API using the provided "OpenAI API Key" and generates a textual suggestion.
+
+Saving and Export:
+
+At the bottom of the section, there should be three buttons: • "Load Canvas" (Import Canvas): Allows importing a previously saved canvas. • "Save Canvas": Allows saving the completed canvas as a JSON file (canvas.data.json). • "Save as DOCX": Allows saving the completed canvas as a DOCX document.
+
+Validation: The text fields "Solution Name", "Owner", and "Short Description of the Solution" are required before saving the file; otherwise, an alert will be displayed.
+
+APIs Used: • OpenAI API (the "OpenAI API Key" is required to generate AI suggestions)
+
+Additional Notes: • The application interface is responsive and adapts to different screen sizes. • The application offers automated AI-generated text for individual sections. • The interface should be intuitive and easy to use, in line with the project goals.
+
+Technical Specification (Details):
+
+Usage of JavaScript: • JavaScript is used to handle user interactions, such as triggering AI suggestions. • JavaScript is used to retrieve and process the OpenAI API key and to communicate with the OpenAI API. • Do not use local libraries. • Remember to import external libraries from cdnjs or a similar repository, but do not use 'SHA-512 integrity'. • Implement all functionalities and do not use placeholders. • Implement the functionality to export to a Word file. • For saving content as DOCX, use the example provided below.
+
+DOCX Example:
+
+<html> <head> <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script> </head> <body> <h1>DOCX browser Word document generation</h1> <button type="button" onclick="generate()">Click to generate document</button> <script> function generate() { const doc = new docx.Document({ sections: [{ properties: {}, children: [ new docx.Paragraph({ children: [ new docx.TextRun("Hello World"), new docx.TextRun({ text: "Foo Bar", bold: true, }), new docx.TextRun({ text: "\tGithub is the best", bold: true, }), ], }), ], }] }); docx.Packer.toBlob(doc).then(blob => { console.log(blob); saveAs(blob, "example.docx"); console.log("Document created successfully"); }); } </script> </body> </html>
+Communication with the OpenAI API: • The application uses JavaScript to perform API requests to OpenAI, sending the text prompt and the API Key. • The response from the OpenAI API is then processed and displayed in the appropriate text field. • Use the LLM model named "gpt-4o-mini".
+Interaction with the User: • JavaScript is used for field validation and displaying error messages. • Messages should be displayed as toasts, formatted appropriately depending on whether the message is an error or just informational. • Improve the responsiveness of the interface through asynchronous data loading. • The application should closely resemble the one in the attached screenshots in terms of appearance.
