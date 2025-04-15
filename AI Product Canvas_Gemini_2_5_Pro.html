@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Product Canvas</title>
-
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -13,275 +12,400 @@
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 20px;
         }
-        .navbar-brand {
-            font-weight: bold;
+        .container {
+            max-width: 960px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #6f42c1; /* Purple */
         }
         .nav-tabs .nav-link {
-            color: var(--bs-primary);
+            color: #6c757d;
+            border: none;
+            border-bottom: 2px solid transparent;
         }
         .nav-tabs .nav-link.active {
-            color: #495057;
-            background-color: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-        .card {
-            margin-bottom: 1.5rem;
-        }
-        .card-header {
-            background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+            color: #6f42c1;
+            border-bottom: 2px solid #6f42c1;
             font-weight: bold;
+        }
+        .section-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .section-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            margin-bottom: 15px;
+            color: #495057;
         }
-        .card-header h5 {
-            margin-bottom: 0;
+        .section-header h5 {
+            margin: 0;
             display: flex;
             align-items: center;
+            color: #6f42c1; /* Purple header text */
+            font-weight: bold;
         }
-        .card-header i {
-            margin-right: 0.5rem;
-            font-size: 1.1rem;
-            color: var(--bs-primary);
+         .section-header h5 i {
+             margin-right: 8px;
+             font-size: 1.2em;
+         }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
         }
-        .btn-ai-suggest {
-            padding: 0.2rem 0.5rem;
+        .form-control, .form-select {
+            border-radius: 0.25rem;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #a88cdb; /* Lighter purple focus */
+            box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+        }
+        .btn-primary {
+            background-color: #6f42c1;
+            border-color: #6f42c1;
+        }
+        .btn-primary:hover {
+            background-color: #5a37a0;
+            border-color: #5a37a0;
+        }
+         .btn-secondary {
+             background-color: #6c757d;
+             border-color: #6c757d;
+         }
+         .btn-secondary:hover {
+             background-color: #5a6268;
+             border-color: #545b62;
+         }
+        .btn-suggest {
+            background-color: #e9ecef;
+            color: #6f42c1;
+            border: 1px solid #ced4da;
+            padding: 0.25rem 0.5rem;
             font-size: 0.8rem;
-            margin-left: 1rem; /* Add space between header and button */
         }
-        textarea.form-control {
+        .btn-suggest:hover {
+            background-color: #ced4da;
+        }
+        .btn-suggest i {
+            margin-right: 3px;
+        }
+        .api-key-section {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .action-buttons {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1090;
+        }
+        textarea {
             min-height: 100px;
             resize: vertical;
         }
-        .api-key-section {
-            background-color: #e9ecef;
-            padding: 1rem;
-            border-radius: 0.25rem;
-            margin-bottom: 1.5rem;
+        label i {
+             margin-right: 5px;
         }
-        .toast-container {
-             z-index: 1090; /* Ensure toast is above other elements */
+        .form-text {
+             font-size: 0.8em;
         }
-        label {
-            font-weight: 500;
-        }
-        .action-buttons {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #dee2e6;
-            text-align: center;
-        }
-        .action-buttons .btn {
-            margin: 0 0.5rem;
-        }
-         /* Ensure button is vertically aligned with header text */
-        .card-header .d-flex {
-            width: 100%;
-            align-items: center;
-        }
-         .card-header .ms-auto {
-            margin-left: auto !important;
+        .required-field::after {
+             content: " *";
+             color: red;
         }
     </style>
 </head>
 <body>
-
-    <header class="bg-primary text-white p-3 mb-4 shadow-sm">
-        <div class="container-fluid">
-            <h1 class="h4 mb-0"><i class="bi bi-lightbulb-fill me-2"></i>AI Product Canvas</h1>
-        </div>
-    </header>
-
-    <div class="container-fluid">
+    <div class="container">
+        <h1 class="mb-4 text-center">AI Product Canvas</h1>
 
         <!-- API Key Section -->
-        <div class="row mb-3">
-            <div class="col-md-8">
-                <label for="openai-api-key" class="form-label"><i class="bi bi-key-fill"></i> Klucz API OpenAI</label>
-                <input type="password" class="form-control" id="openai-api-key" placeholder="Wprowadź swój klucz API OpenAI">
+        <div class="api-key-section row align-items-center gx-2">
+            <div class="col-md-7">
+                <label for="openai-api-key" class="form-label mb-0">Klucz API OpenAI:</label>
+                <input type="password" class="form-control form-control-sm" id="openai-api-key" placeholder="Wprowadź swój klucz API OpenAI">
             </div>
-            <div class="col-md-4 d-flex align-items-end">
-                <button class="btn btn-secondary w-100" id="test-connection-btn" type="button"><i class="bi bi-plug-fill me-1"></i>Test połączenia</button>
+            <div class="col-md-3">
+                 <button class="btn btn-secondary btn-sm w-100 mt-3 mt-md-0" id="test-connection-btn">
+                    <i class="bi bi-plug"></i> Test połączenia
+                </button>
+            </div>
+             <div class="col-md-2 text-center text-md-start mt-2 mt-md-0">
+                <span id="api-status" class="badge bg-secondary">Nie testowano</span>
             </div>
         </div>
 
         <!-- Tabs Navigation -->
-        <ul class="nav nav-tabs mb-3" id="canvasTabs" role="tablist">
+        <ul class="nav nav-tabs mb-4" id="canvasTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="definicja-tab" data-bs-toggle="tab" data-bs-target="#definicja-pane" type="button" role="tab" aria-controls="definicja-pane" aria-selected="true"><i class="bi bi-pencil-square me-1"></i>Definicja Rozwiązania</button>
+                <button class="nav-link active" id="definicja-tab" data-bs-toggle="tab" data-bs-target="#definicja-content" type="button" role="tab" aria-controls="definicja-content" aria-selected="true">Definicja Rozwiązania</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="biznes-tab" data-bs-toggle="tab" data-bs-target="#biznes-pane" type="button" role="tab" aria-controls="biznes-pane" aria-selected="false"><i class="bi bi-briefcase-fill me-1"></i>Aspekty Biznesowe i Użytkownik</button>
+                <button class="nav-link" id="biznes-tab" data-bs-toggle="tab" data-bs-target="#biznes-content" type="button" role="tab" aria-controls="biznes-content" aria-selected="false">Aspekty Biznesowe i Użytkownik</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="technologia-tab" data-bs-toggle="tab" data-bs-target="#technologia-pane" type="button" role="tab" aria-controls="technologia-pane" aria-selected="false"><i class="bi bi-gear-fill me-1"></i>Aspekty Technologiczne</button>
+                <button class="nav-link" id="technologia-tab" data-bs-toggle="tab" data-bs-target="#technologia-content" type="button" role="tab" aria-controls="technologia-content" aria-selected="false">Aspekty Technologiczne</button>
             </li>
         </ul>
 
-        <!-- Tabs Content -->
+        <!-- Tab Content -->
         <div class="tab-content" id="canvasTabsContent">
 
             <!-- Tab 1: Definicja Rozwiązania -->
-            <div class="tab-pane fade show active" id="definicja-pane" role="tabpanel" aria-labelledby="definicja-tab">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                             <h5 class="mb-0"><i class="bi bi-tag-fill"></i>Nazwa rozwiązania</h5>
-                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="nazwa-rozwiazania" data-category-name="Nazwa rozwiązania"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+            <div class="tab-pane fade show active" id="definicja-content" role="tabpanel" aria-labelledby="definicja-tab">
+                <h2 class="mb-4">Podstawowe Informacje o rozwiązaniu</h2>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5><i class="bi bi-card-heading"></i> Nazwa rozwiązania</h5>
+                        <button class="btn btn-suggest btn-sm" data-target="nazwa-rozwiazania" data-label="Nazwa rozwiązania">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" id="nazwa-rozwiazania" placeholder="Podaj nazwę projektu/rozwiązania AI">
-                    </div>
+                    <label for="nazwa-rozwiazania" class="form-label required-field">Krótka, zwięzła nazwa projektu AI</label>
+                    <input type="text" class="form-control" id="nazwa-rozwiazania" placeholder="Np. Inteligentny Asystent Klienta">
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                             <h5 class="mb-0"><i class="bi bi-person-badge-fill"></i>Właściciel</h5>
-                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="wlasciciel" data-category-name="Właściciel"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-person-fill"></i> Właściciel</h5>
+                        <button class="btn btn-suggest btn-sm" data-target="wlasciciel" data-label="Właściciel">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" id="wlasciciel" placeholder="Kto jest głównym właścicielem biznesowym/produktowym?">
-                    </div>
+                    <label for="wlasciciel" class="form-label required-field">Osoba lub dział odpowiedzialny za projekt</label>
+                    <input type="text" class="form-control" id="wlasciciel" placeholder="Np. Dział Marketingu">
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                             <h5 class="mb-0"><i class="bi bi-file-text-fill"></i>Krótki opis rozwiązania</h5>
-                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="krotki-opis" data-category-name="Krótki opis rozwiązania"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-text-paragraph"></i> Krótki opis rozwiązania</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="krotki-opis" data-label="Krótki opis rozwiązania">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="krotki-opis" rows="4" placeholder="Opisz w kilku zdaniach, czym jest rozwiązanie i co robi."></textarea>
-                    </div>
+                    <label for="krotki-opis" class="form-label required-field">Zwięzły opis ogólnego celu i funkcjonalności rozwiązania AI</label>
+                    <textarea class="form-control" id="krotki-opis" rows="4" placeholder="Aplikacja AI analizująca zapytania klientów i automatycznie kierująca je do odpowiednich działów, w celu skrócenia czasu odpowiedzi i poprawy satysfakcji klienta."></textarea>
+                     <div class="form-text">Możesz używać składni markdown (np. **pogrubienie**, *kursywa*)</div>
                 </div>
             </div>
 
             <!-- Tab 2: Aspekty Biznesowe i Użytkownik -->
-            <div class="tab-pane fade" id="biznes-pane" role="tabpanel" aria-labelledby="biznes-tab">
-                <div class="card">
-                     <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                           <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i>Problem i wartość biznesowa</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="problem-wartosc" data-category-name="Problem i wartość biznesowa"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                       </div>
+            <div class="tab-pane fade" id="biznes-content" role="tabpanel" aria-labelledby="biznes-tab">
+                <h2 class="mb-4">Problem i wartość biznesowa</h2>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-bullseye"></i> Problem biznesowy i oczekiwane rezultaty</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="problem-biznesowy" data-label="Problem biznesowy i oczekiwane rezultaty">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="problem-wartosc" rows="4" placeholder="Jaki problem rozwiązuje AI? Jaką wartość biznesową przynosi (np. oszczędność czasu, redukcja kosztów, nowe możliwości)?"></textarea>
-                    </div>
+                    <label for="problem-biznesowy" class="form-label">Szczegółowe opisanie problemu biznesowego, który ma rozwiązać narzędzie AI, oraz oczekiwanych rezultatów</label>
+                    <textarea class="form-control" id="problem-biznesowy" rows="4" placeholder="Obecnie czas odpowiedzi na zapytania klientów jest zbyt długi, co negatywnie wpływa na ich satysfakcję. Chcemy zautomatyzować proces kierowania zapytań, skracając czas odpowiedzi i zwiększając efektywność działu obsługi klienta."></textarea>
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                           <h5 class="mb-0"><i class="bi bi-clipboard-data-fill"></i>Dane</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dane-biznesowe" data-category-name="Dane (Biznesowe)"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-graph-up-arrow"></i> Wartość biznesowa</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="wartosc-biznesowa" data-label="Wartość biznesowa">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="dane-biznesowe" rows="4" placeholder="Jakie dane są potrzebne z perspektywy biznesowej? Skąd pochodzą? Czy są dostępne? Jakie są ograniczenia (np. RODO)?"></textarea>
-                    </div>
+                    <label for="wartosc-biznesowa" class="form-label">Konkretne korzyści biznesowe wynikające z wdrożenia rozwiązania AI</label>
+                    <textarea class="form-control" id="wartosc-biznesowa" rows="4" placeholder="Zmniejszenie kosztów operacyjnych działu obsługi klienta o 15%, wzrost satysfakcji klientów mierzony wskaźnikiem NPS o 10 punktów, zwiększenie liczby rozwiązanych spraw w pierwszym kontakcie o 20%."></textarea>
                 </div>
 
-                 <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                           <h5 class="mb-0"><i class="bi bi-people-fill"></i>Użytkownicy</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="uzytkownicy" data-category-name="Użytkownicy"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-exclamation-triangle-fill"></i> Możliwe przeszkody</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="mozliwe-przeszkody" data-label="Możliwe przeszkody">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="uzytkownicy" rows="4" placeholder="Kim są główni użytkownicy rozwiązania? Jakie są ich potrzeby i oczekiwania wobec AI?"></textarea>
-                    </div>
+                    <label for="mozliwe-przeszkody" class="form-label">Potencjalne trudności i wyzwania związane z wdrożeniem</label>
+                    <textarea class="form-control" id="mozliwe-przeszkody" rows="3" placeholder="Konieczność integracji z przestarzałymi systemami IT, opór ze strony użytkowników wobec nowych technologii."></textarea>
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                           <h5 class="mb-0"><i class="bi bi-graph-up-arrow"></i>Działanie rozwiązania i mierniki sukcesu</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dzialanie-mierniki" data-category-name="Działanie rozwiązania i mierniki sukcesu"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                        </div>
+                <h2 class="mb-4 mt-5">Dane</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-database-fill"></i> Dostępność i źródła danych</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="dostepnosc-danych" data-label="Dostępność i źródła danych">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="dzialanie-mierniki" rows="4" placeholder="Jak użytkownik będzie interagował z rozwiązaniem? Jakie kroki wykonuje AI? Jakie są kluczowe wskaźniki efektywności (KPI) i jak będą mierzone?"></textarea>
+                    <label for="dostepnosc-danych" class="form-label">Jakie dane są potrzebne? Czy są dostępne? Skąd pochodzą?</label>
+                    <textarea class="form-control" id="dostepnosc-danych" rows="3" placeholder="Potrzebne są historyczne zapisy zapytań klientów (e-maile, chaty). Dane są dostępne w systemie CRM i archiwum poczty."></textarea>
+                </div>
+
+                <h2 class="mb-4 mt-5">Użytkownicy</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-people-fill"></i> Grupy użytkowników i ich potrzeby</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="uzytkownicy-potrzeby" data-label="Grupy użytkowników i ich potrzeby">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
+                    <label for="uzytkownicy-potrzeby" class="form-label">Kto będzie korzystał z rozwiązania? Jakie są ich główne cele i oczekiwania?</label>
+                    <textarea class="form-control" id="uzytkownicy-potrzeby" rows="3" placeholder="Główni użytkownicy to pracownicy działu obsługi klienta. Potrzebują szybkiego dostępu do skategoryzowanych zapytań i sugestii odpowiedzi."></textarea>
+                </div>
+
+                 <h2 class="mb-4 mt-5">Działanie rozwiązania i mierniki sukcesu</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-activity"></i> Kluczowe funkcjonalności</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="kluczowe-funkcjonalnosci" data-label="Kluczowe funkcjonalności">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
+                    </div>
+                    <label for="kluczowe-funkcjonalnosci" class="form-label">Jakie zadania będzie wykonywać AI? Jakie są główne funkcje aplikacji?</label>
+                    <textarea class="form-control" id="kluczowe-funkcjonalnosci" rows="4" placeholder="1. Automatyczna kategoryzacja przychodzących zapytań. 2. Identyfikacja pilności. 3. Sugerowanie odpowiedniego działu/osoby do obsługi. 4. Generowanie wstępnych sugestii odpowiedzi."></textarea>
+                </div>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-clipboard-data-fill"></i> Mierniki sukcesu (KPI)</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="mierniki-sukcesu" data-label="Mierniki sukcesu (KPI)">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
+                    </div>
+                    <label for="mierniki-sukcesu" class="form-label">Jak będziemy mierzyć efektywność rozwiązania?</label>
+                    <textarea class="form-control" id="mierniki-sukcesu" rows="3" placeholder="Średni czas odpowiedzi na zapytanie, wskaźnik NPS, % spraw rozwiązanych przy pierwszym kontakcie, dokładność kategoryzacji AI."></textarea>
                 </div>
             </div>
 
-            <!-- Tab 3: Aspekty Technologiczne -->
-            <div class="tab-pane fade" id="technologia-pane" role="tabpanel" aria-labelledby="technologia-tab">
-                <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <h5 class="mb-0"><i class="bi bi-database-fill-gear"></i>Dane i modele</h5>
-                            <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dane-modele" data-category-name="Dane i modele"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                         </div>
+             <!-- Tab 3: Aspekty Technologiczne -->
+            <div class="tab-pane fade" id="technologia-content" role="tabpanel" aria-labelledby="technologia-tab">
+                 <h2 class="mb-4">Dane i modele</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-cpu-fill"></i> Modele AI i techniki</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="modele-ai" data-label="Modele AI i techniki">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="dane-modele" rows="4" placeholder="Jakie dane techniczne są potrzebne do trenowania/działania modelu AI? Jaki typ modelu AI jest rozważany (np. klasyfikacja, regresja, NLP, generatywne)? Czy potrzebny jest pre-trening, fine-tuning?"></textarea>
+                    <label for="modele-ai" class="form-label">Jakie algorytmy/modele AI zostaną użyte (np. NLP, klasyfikacja, regresja)?</label>
+                    <textarea class="form-control" id="modele-ai" rows="3" placeholder="Wykorzystanie modeli NLP do analizy tekstu (np. BERT, GPT), klasyfikatorów (np. SVM, Random Forest) do kategoryzacji."></textarea>
+                </div>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-clipboard-check-fill"></i> Ocena i walidacja modeli</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="ocena-modeli" data-label="Ocena i walidacja modeli">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
+                    <label for="ocena-modeli" class="form-label">Jak modele będą trenowane, testowane i oceniane?</label>
+                    <textarea class="form-control" id="ocena-modeli" rows="3" placeholder="Podział danych na zbiory treningowy, walidacyjny i testowy. Metryki: accuracy, precision, recall, F1-score. Walidacja krzyżowa."></textarea>
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <h5 class="mb-0"><i class="bi bi-hdd-stack-fill"></i>Infrastruktura i bezpieczeństwo</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="infrastruktura-bezpieczenstwo" data-category-name="Infrastruktura i bezpieczeństwo"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                         </div>
+                <h2 class="mb-4 mt-5">Infrastruktura i bezpieczeństwo</h2>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-hdd-stack-fill"></i> Infrastruktura</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="infrastruktura" data-label="Infrastruktura">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="infrastruktura-bezpieczenstwo" rows="4" placeholder="Gdzie będzie hostowane rozwiązanie (chmura, on-premise)? Jakie są wymagania sprzętowe/software'owe? Jakie środki bezpieczeństwa danych i modelu zostaną zastosowane?"></textarea>
+                    <label for="infrastruktura" class="form-label">Gdzie rozwiązanie będzie hostowane (chmura, on-premise)? Jakie zasoby są potrzebne?</label>
+                    <textarea class="form-control" id="infrastruktura" rows="3" placeholder="Hosting w chmurze (np. AWS, Azure, GCP). Potrzebne zasoby: instancje obliczeniowe (CPU/GPU), storage, bazy danych."></textarea>
+                </div>
+                <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-shield-lock-fill"></i> Bezpieczeństwo i prywatność</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="bezpieczenstwo" data-label="Bezpieczeństwo i prywatność">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
+                    <label for="bezpieczenstwo" class="form-label">Jakie są wymagania dotyczące bezpieczeństwa danych i zgodności (np. RODO)?</label>
+                    <textarea class="form-control" id="bezpieczenstwo" rows="3" placeholder="Szyfrowanie danych w spoczynku i tranzycie. Anonimizacja danych osobowych. Zgodność z RODO. Kontrola dostępu."></textarea>
                 </div>
 
-                <div class="card">
-                     <div class="card-header">
-                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <h5 class="mb-0"><i class="bi bi-palette-fill"></i>Interfejs użytkownika (UX)</h5>
-                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="interfejs-ux" data-category-name="Interfejs użytkownika (UX)"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                         </div>
+                 <h2 class="mb-4 mt-5">Interfejs użytkownika (UX)</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-display-fill"></i> Interfejs i interakcja</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="interfejs-ux" data-label="Interfejs i interakcja">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="interfejs-ux" rows="4" placeholder="Jak będzie wyglądał interfejs użytkownika? Jak AI będzie prezentować wyniki/sugestie? Jakie mechanizmy feedbacku od użytkownika są planowane?"></textarea>
-                    </div>
+                    <label for="interfejs-ux" class="form-label">Jak użytkownicy będą interagować z rozwiązaniem? Jak będzie wyglądał interfejs?</label>
+                    <textarea class="form-control" id="interfejs-ux" rows="3" placeholder="Interfejs webowy zintegrowany z istniejącym systemem CRM. Dashboard pokazujący skategoryzowane zapytania i sugestie."></textarea>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <h5 class="mb-0"><i class="bi bi-code-slash"></i>Rozwój aplikacji</h5>
-                            <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="rozwoj-aplikacji" data-category-name="Rozwój aplikacji"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
-                         </div>
+                 <h2 class="mb-4 mt-5">Rozwój aplikacji</h2>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-code-slash"></i> Zespół i metodologia</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="zespol-metodologia" data-label="Zespół i metodologia">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="rozwoj-aplikacji" rows="4" placeholder="Jakie technologie (języki programowania, frameworki) będą użyte? Jakie są plany dotyczące testowania, wdrażania (CI/CD) i monitorowania aplikacji oraz modelu AI?"></textarea>
+                    <label for="zespol-metodologia" class="form-label">Kto będzie rozwijał rozwiązanie? Jaka metodologia (np. Agile, Scrum) zostanie użyta?</label>
+                    <textarea class="form-control" id="zespol-metodologia" rows="3" placeholder="Wewnętrzny zespół IT (data scientists, backend/frontend developers, UX designer) + konsultanci AI. Metodologia Agile (Scrum)."></textarea>
+                </div>
+                 <div class="section-card">
+                     <div class="section-header">
+                        <h5><i class="bi bi-calendar-check-fill"></i> Plan wdrożenia i utrzymania</h5>
+                         <button class="btn btn-suggest btn-sm" data-target="plan-wdrozenia" data-label="Plan wdrożenia i utrzymania">
+                            <i class="bi bi-lightbulb"></i> Sugestia AI
+                        </button>
                     </div>
+                    <label for="plan-wdrozenia" class="form-label">Jakie są etapy wdrożenia? Jak rozwiązanie będzie monitorowane i utrzymywane?</label>
+                    <textarea class="form-control" id="plan-wdrozenia" rows="3" placeholder="Etapy: MVP, testy pilotażowe, pełne wdrożenie. Monitorowanie wydajności modelu, logów aplikacji. Regularne aktualizacje i retrening modelu."></textarea>
                 </div>
             </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-             <input type="file" id="importFile" accept=".json" style="display: none;">
-             <button class="btn btn-info text-white" id="load-canvas-btn" type="button"><i class="bi bi-upload me-1"></i>Wczytaj Kanwę</button>
-             <button class="btn btn-success" id="save-canvas-btn" type="button"><i class="bi bi-save-fill me-1"></i>Zapisz Kanwę</button>
-             <button class="btn btn-primary" id="save-docx-btn" type="button"><i class="bi bi-file-earmark-word-fill me-1"></i>Zapisz jako DOCX</button>
+            <input type="file" id="load-canvas-input" accept=".json" style="display: none;">
+            <button class="btn btn-secondary" id="load-canvas-btn">
+                <i class="bi bi-cloud-arrow-up"></i> Wczytaj Kanwę
+            </button>
+            <button class="btn btn-primary" id="save-canvas-btn">
+                <i class="bi bi-cloud-arrow-down"></i> Zapisz Kanwę
+            </button>
+            <button class="btn btn-primary" id="save-docx-btn">
+                <i class="bi bi-file-earmark-word"></i> Zapisz jako DOCX
+            </button>
         </div>
-
-    </div> <!-- /container-fluid -->
+    </div>
 
     <!-- Toast Container -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <!-- Toasts will be added here -->
+         <!-- Toast template (will be cloned) -->
+        <div id="toast-template" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <strong class="me-auto toast-title">Powiadomienie</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <!-- Message will be inserted here -->
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <!-- docx library -->
     <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
@@ -289,391 +413,428 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const apiKeyInput = document.getElementById('openai-api-key');
-            const testConnectionBtn = document.getElementById('test-connection-btn');
-            const saveCanvasBtn = document.getElementById('save-canvas-btn');
-            const loadCanvasBtn = document.getElementById('load-canvas-btn');
-            const saveDocxBtn = document.getElementById('save-docx-btn');
-            const importFileInput = document.getElementById('importFile');
-            const toastContainer = document.querySelector('.toast-container');
+        // --- DOM Elements ---
+        const apiKeyInput = document.getElementById('openai-api-key');
+        const testConnectionBtn = document.getElementById('test-connection-btn');
+        const apiStatusSpan = document.getElementById('api-status');
+        const saveCanvasBtn = document.getElementById('save-canvas-btn');
+        const loadCanvasBtn = document.getElementById('load-canvas-btn');
+        const loadCanvasInput = document.getElementById('load-canvas-input');
+        const saveDocxBtn = document.getElementById('save-docx-btn');
+        const suggestionButtons = document.querySelectorAll('.btn-suggest');
+        const toastContainer = document.querySelector('.toast-container');
+        const toastTemplate = document.getElementById('toast-template');
 
-            // --- Toast Notification Function ---
-            function showToast(message, type = 'info') {
-                const toastId = 'toast-' + Date.now();
-                let bgClass = 'bg-info';
-                let iconClass = 'bi-info-circle-fill';
-                if (type === 'success') {
-                    bgClass = 'bg-success';
-                    iconClass = 'bi-check-circle-fill';
-                } else if (type === 'error') {
-                    bgClass = 'bg-danger';
-                    iconClass = 'bi-exclamation-triangle-fill';
-                } else if (type === 'warning') {
-                     bgClass = 'bg-warning';
-                     iconClass = 'bi-exclamation-triangle-fill';
-                }
+        const allInputIds = [
+            'nazwa-rozwiazania', 'wlasciciel', 'krotki-opis',
+            'problem-biznesowy', 'wartosc-biznesowa', 'mozliwe-przeszkody',
+            'dostepnosc-danych', 'uzytkownicy-potrzeby', 'kluczowe-funkcjonalnosci',
+            'mierniki-sukcesu', 'modele-ai', 'ocena-modeli', 'infrastruktura',
+            'bezpieczenstwo', 'interfejs-ux', 'zespol-metodologia', 'plan-wdrozenia'
+        ];
 
+        const requiredFields = ['nazwa-rozwiazania', 'wlasciciel', 'krotki-opis'];
 
-                const toastHtml = `
-                    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                <i class="bi ${iconClass} me-2"></i>
-                                ${message}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>`;
-                toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-                const toastElement = document.getElementById(toastId);
-                const toast = new bootstrap.Toast(toastElement);
+        // --- Toast Notification Function ---
+        function showToast(message, type = 'info') { // type: 'info', 'success', 'danger', 'warning'
+            const newToast = toastTemplate.cloneNode(true);
+            newToast.removeAttribute('id');
+            const toastBody = newToast.querySelector('.toast-body');
+            const toastTitle = newToast.querySelector('.toast-title');
 
-                toastElement.addEventListener('hidden.bs.toast', () => {
-                    toastElement.remove();
-                });
+            toastBody.textContent = message;
 
-                toast.show();
+            // Remove existing background classes
+            newToast.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info', 'text-white');
+            toastTitle.textContent = 'Powiadomienie'; // Default title
+
+            switch (type) {
+                case 'success':
+                    newToast.classList.add('bg-success', 'text-white');
+                    toastTitle.textContent = 'Sukces';
+                    break;
+                case 'danger':
+                    newToast.classList.add('bg-danger', 'text-white');
+                    toastTitle.textContent = 'Błąd';
+                    break;
+                case 'warning':
+                    newToast.classList.add('bg-warning', 'text-dark'); // Dark text for warning bg
+                     toastTitle.textContent = 'Ostrzeżenie';
+                    break;
+                case 'info':
+                default:
+                    newToast.classList.add('bg-info', 'text-dark'); // Dark text for info bg
+                    break;
             }
 
-            // --- Collect Canvas Data ---
-            function getCanvasData() {
-                const data = {};
-                const inputs = document.querySelectorAll('.form-control[id]');
-                inputs.forEach(input => {
-                    if (input.id !== 'openai-api-key') { // Don't save API key
-                       data[input.id] = input.value;
-                    }
-                });
-                return data;
-            }
+            toastContainer.appendChild(newToast);
+            const toast = new bootstrap.Toast(newToast);
+            toast.show();
 
-             // --- Populate Canvas Data ---
-            function populateCanvas(data) {
-                const inputs = document.querySelectorAll('.form-control[id]');
-                inputs.forEach(input => {
-                    if (data.hasOwnProperty(input.id) && input.id !== 'openai-api-key') {
-                        input.value = data[input.id];
-                    } else if (input.id !== 'openai-api-key') {
-                         // Clear fields not present in the loaded data
-                         input.value = '';
-                    }
-                });
-                 showToast('Kanwa została pomyślnie wczytana.', 'success');
-            }
-
-            // --- Validation ---
-            function validateRequiredFields() {
-                const requiredIds = ['nazwa-rozwiazania', 'wlasciciel', 'krotki-opis'];
-                for (const id of requiredIds) {
-                    const field = document.getElementById(id);
-                    if (!field.value.trim()) {
-                        showToast(`Pole "${field.closest('.card').querySelector('h5').innerText}" jest wymagane.`, 'error');
-                        field.focus();
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-             // --- OpenAI API Call ---
-            async function getOpenAISuggestion(apiKey, categoryName, context) {
-                const systemPrompt = "Jesteś business analitykiem tworzącym specyfikację rozwiązania. Użytkownik poda Ci nazwę kategorii/obszar który ty uzupełnisz na podstawie dostarczonych Ci innych informacji. Dobierz sugestię do tej kategorii zgodnie z załączonym kontekstem. Zwróć tylko i wyłącznie sugestię, bez dodatkowych komentarzy, przykładów lub kontekstu. Powinno być węźle.";
-                const userPrompt = `Kategoria w dla której powinien utworzyć sugestie to: ${categoryName}\nKontekst:\n${context}`;
-                const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: "gpt-4o-mini", // Use the specified model
-                            messages: [
-                                { role: "system", content: systemPrompt },
-                                { role: "user", content: userPrompt }
-                            ],
-                            temperature: 0.7
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('OpenAI API Error:', errorData);
-                        throw new Error(`Błąd API OpenAI: ${response.status} ${response.statusText}. ${errorData.error?.message || ''}`);
-                    }
-
-                    const data = await response.json();
-                    if (data.choices && data.choices.length > 0 && data.choices[0].message) {
-                        return data.choices[0].message.content.trim();
-                    } else {
-                        throw new Error('Otrzymano nieprawidłową odpowiedź z API OpenAI.');
-                    }
-                } catch (error) {
-                    console.error("Błąd podczas wywołania API OpenAI:", error);
-                    showToast(`Błąd generowania sugestii: ${error.message}`, 'error');
-                    return null; // Indicate failure
-                }
-            }
-
-            // --- Build Context for AI ---
-             function buildAIContext() {
-                const data = getCanvasData();
-                let context = "";
-                const fieldOrder = [ // Define order for better context structure
-                    'nazwa-rozwiazania', 'wlasciciel', 'krotki-opis',
-                    'problem-wartosc', 'dane-biznesowe', 'uzytkownicy', 'dzialanie-mierniki',
-                    'dane-modele', 'infrastruktura-bezpieczenstwo', 'interfejs-ux', 'rozwoj-aplikacji'
-                ];
-
-                fieldOrder.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element && data[id]?.trim()) {
-                        const labelElement = element.closest('.card').querySelector('h5');
-                        const label = labelElement ? labelElement.innerText : id.replace(/-/g, ' '); // Fallback label
-                         context += `${label}: ${data[id]}\n`;
-                    }
-                });
-
-                return context.trim() || "Brak wprowadzonych danych kontekstowych.";
-            }
-
-            // --- Event Listener: AI Suggestion Buttons ---
-            document.querySelectorAll('.btn-ai-suggest').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const apiKey = apiKeyInput.value.trim();
-                    if (!apiKey) {
-                        showToast('Wprowadź Klucz API OpenAI w odpowiednim polu.', 'warning');
-                        apiKeyInput.focus();
-                        return;
-                    }
-
-                    const targetId = button.dataset.targetId;
-                    const categoryName = button.dataset.categoryName;
-                    const targetTextarea = document.getElementById(targetId);
-
-                    if (!targetTextarea) {
-                        console.error(`Nie znaleziono elementu docelowego o ID: ${targetId}`);
-                        showToast('Wystąpił błąd wewnętrzny aplikacji.', 'error');
-                        return;
-                    }
-
-                    const context = buildAIContext();
-
-                    // Add loading indicator
-                    button.disabled = true;
-                    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generowanie...';
-
-                    try {
-                         const suggestion = await getOpenAISuggestion(apiKey, categoryName, context);
-                         if (suggestion !== null) { // Check if suggestion was successful
-                            targetTextarea.value = suggestion;
-                            showToast(`Sugestia dla "${categoryName}" została wygenerowana.`, 'success');
-                         }
-                         // If suggestion is null, the error toast was already shown in getOpenAISuggestion
-                    } catch (error) {
-                        // Error already handled and shown in getOpenAISuggestion
-                        console.error("Error caught in button listener:", error);
-                    } finally {
-                        // Restore button state
-                         button.disabled = false;
-                         button.innerHTML = '<i class="bi bi-magic me-1"></i>Sugestia AI';
-                    }
-                });
+            // Optional: Remove toast from DOM after hiding
+            newToast.addEventListener('hidden.bs.toast', () => {
+                newToast.remove();
             });
+        }
 
-             // --- Event Listener: Test Connection ---
-            testConnectionBtn.addEventListener('click', async () => {
-                const apiKey = apiKeyInput.value.trim();
-                if (!apiKey) {
-                    showToast('Wprowadź Klucz API OpenAI, aby przetestować połączenie.', 'warning');
-                    apiKeyInput.focus();
-                    return;
+        // --- Validation ---
+        function validateRequiredFields() {
+            let isValid = true;
+            requiredFields.forEach(id => {
+                const element = document.getElementById(id);
+                if (!element.value.trim()) {
+                    element.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    element.classList.remove('is-invalid');
                 }
+            });
+            if (!isValid) {
+                 showToast('Proszę wypełnić wszystkie wymagane pola (oznaczone *)', 'warning');
+            }
+            return isValid;
+        }
 
-                testConnectionBtn.disabled = true;
-                testConnectionBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Testowanie...';
-
-                // Simple test: Ask for a very short, predictable response
-                 try {
-                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                         method: 'POST',
-                         headers: {
-                             'Content-Type': 'application/json',
-                             'Authorization': `Bearer ${apiKey}`
-                         },
-                         body: JSON.stringify({
-                             model: "gpt-4o-mini",
-                             messages: [{ role: "user", content: "Powiedz 'test'" }],
-                             max_tokens: 5
-                         })
-                     });
-
-                     if (response.ok) {
-                         const data = await response.json();
-                         // Basic check if response seems valid
-                         if (data.choices && data.choices.length > 0) {
-                             showToast('Połączenie z API OpenAI jest poprawne.', 'success');
-                         } else {
-                             throw new Error('Otrzymano nieoczekiwaną odpowiedź od API.');
-                         }
-                     } else {
-                          const errorData = await response.json();
-                          console.error('Test Connection Error:', errorData);
-                          throw new Error(`Błąd ${response.status}: ${errorData.error?.message || response.statusText}`);
-                     }
-                 } catch (error) {
-                     console.error("Błąd podczas testowania połączenia:", error);
-                     showToast(`Test połączenia nie powiódł się: ${error.message}`, 'error');
-                 } finally {
-                     testConnectionBtn.disabled = false;
-                     testConnectionBtn.innerHTML = '<i class="bi bi-plug-fill me-1"></i>Test połączenia';
+        // --- Gather Context for AI ---
+        function gatherContext() {
+            let context = "";
+            allInputIds.forEach(id => {
+                const element = document.getElementById(id);
+                const labelElement = document.querySelector(`label[for="${id}"]`);
+                let labelText = labelElement ? labelElement.textContent.replace('*','').trim() : id;
+                 // Attempt to get better label from header if label is simple
+                 const header = element.closest('.section-card')?.querySelector('.section-header h5');
+                 if (header) {
+                    labelText = header.textContent.trim();
                  }
-            });
 
-            // --- Event Listener: Save Canvas (JSON) ---
-            saveCanvasBtn.addEventListener('click', () => {
-                if (!validateRequiredFields()) {
-                    return;
+                if (element && element.value.trim()) {
+                    context += `${labelText}: ${element.value.trim()}\n`;
                 }
-                const data = getCanvasData();
-                const jsonData = JSON.stringify(data, null, 2); // Pretty print JSON
-                const blob = new Blob([jsonData], { type: 'application/json' });
-                saveAs(blob, 'canvas.data.json');
-                showToast('Kanwa została zapisana jako canvas.data.json.', 'success');
             });
+            return context.trim();
+        }
 
-             // --- Event Listener: Load Canvas Button ---
-            loadCanvasBtn.addEventListener('click', () => {
-                importFileInput.click(); // Trigger hidden file input
-            });
-
-             // --- Event Listener: File Input Change (for loading) ---
-             importFileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    return;
-                }
-                if (file.type !== 'application/json') {
-                    showToast('Nieprawidłowy format pliku. Wybierz plik .json.', 'error');
-                    importFileInput.value = ''; // Reset file input
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const loadedData = JSON.parse(e.target.result);
-                        populateCanvas(loadedData);
-                    } catch (error) {
-                        console.error("Błąd podczas parsowania pliku JSON:", error);
-                        showToast('Nie udało się wczytać pliku. Sprawdź format JSON.', 'error');
-                    } finally {
-                         importFileInput.value = ''; // Reset file input after processing
-                    }
-                };
-                 reader.onerror = () => {
-                    showToast('Nie udało się odczytać pliku.', 'error');
-                    importFileInput.value = ''; // Reset file input
-                };
-                reader.readAsText(file);
-            });
-
-
-            // --- Event Listener: Save as DOCX ---
-             saveDocxBtn.addEventListener('click', () => {
-                if (!validateRequiredFields()) {
-                    return;
-                }
-                generateDocx();
-            });
-
-             // --- DOCX Generation Function ---
-            function generateDocx() {
-                const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
-                const data = getCanvasData();
-                const sectionsData = [
-                    { title: "Definicja Rozwiązania", fields: ['nazwa-rozwiazania', 'wlasciciel', 'krotki-opis'], icon: "bi-pencil-square" },
-                    { title: "Aspekty Biznesowe i Użytkownik", fields: ['problem-wartosc', 'dane-biznesowe', 'uzytkownicy', 'dzialanie-mierniki'], icon: "bi-briefcase-fill" },
-                    { title: "Aspekty Technologiczne", fields: ['dane-modele', 'infrastruktura-bezpieczenstwo', 'interfejs-ux', 'rozwoj-aplikacji'], icon: "bi-gear-fill" }
-                ];
-
-                const docChildren = [];
-
-                // Add main title
-                docChildren.push(new Paragraph({
-                    text: "AI Product Canvas",
-                    heading: HeadingLevel.TITLE,
-                    alignment: docx.AlignmentType.CENTER,
-                     spacing: { after: 200 }
-                }));
-
-
-                 sectionsData.forEach(section => {
-                    // Section Title
-                    docChildren.push(new Paragraph({
-                         children: [
-                             new TextRun({ text: section.title, bold: true, size: 28 }) // size is in half-points (14pt)
-                         ],
-                         heading: HeadingLevel.HEADING_1,
-                         spacing: { before: 300, after: 150 },
-                         border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } } // Add bottom border
-                    }));
-
-                     section.fields.forEach(fieldId => {
-                        const element = document.getElementById(fieldId);
-                        const labelElement = element?.closest('.card')?.querySelector('h5');
-                        const labelText = labelElement ? labelElement.innerText.trim() : fieldId.replace(/-/g, ' ');
-                        const value = data[fieldId] || '';
-
-                        // Field Label (Heading 2 style)
-                         docChildren.push(new Paragraph({
-                             children: [
-                                 new TextRun({ text: labelText, bold: true, size: 24 }) // 12pt
-                             ],
-                              heading: HeadingLevel.HEADING_2,
-                              spacing: { before: 200, after: 100 }
-                         }));
-
-                         // Field Value - handle multiline text from textareas
-                         const valueLines = value.split('\n');
-                         valueLines.forEach(line => {
-                             docChildren.push(new Paragraph({
-                                 children: [
-                                     new TextRun({ text: line, size: 22 }) // 11pt
-                                 ],
-                                 indent: { left: 720 }, // Indent content (optional) - 720 twips = 0.5 inch
-                                 spacing: { after: 50 }
-                             }));
-                         });
-                         // Add extra space after the value block if it's not empty
-                         if (value.trim()) {
-                              docChildren.push(new Paragraph({ spacing: { after: 100 } }));
-                         }
-                    });
-                });
-
-                const doc = new Document({
-                    sections: [{
-                        properties: {},
-                        children: docChildren
-                    }]
-                });
-
-                 Packer.toBlob(doc).then(blob => {
-                    saveAs(blob, "AI_Product_Canvas.docx");
-                    showToast('Dokument DOCX został wygenerowany.', 'success');
-                    console.log("Document created successfully");
-                }).catch(error => {
-                     console.error("Błąd podczas generowania DOCX:", error);
-                     showToast('Wystąpił błąd podczas generowania pliku DOCX.', 'error');
-                 });
+        // --- OpenAI API Interaction ---
+        async function getOpenAISuggestion(targetElementId, categoryLabel, button) {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                showToast('Proszę wprowadzić klucz API OpenAI.', 'warning');
+                return;
             }
 
-        });
-    </script>
+            const targetElement = document.getElementById(targetElementId);
+            const originalButtonText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generowanie...';
 
+            const context = gatherContext();
+            const systemPrompt = "Jesteś business analitykiem tworzącym specyfikację rozwiązania. Użytkownik poda Ci nazwę kategorii/obszar który ty uzupełnisz na podstawie dostarczonych Ci innych informacji. Dobierz sugestię do tej kategorii zgodnie z załączonym kontekstem. Zwróć tylko i wyłącznie sugestię, bez dodatkowych komentarzy, przykładów lub kontekstu. Powinno być zwięźle.";
+            const userPrompt = `Kategoria w dla której powinien utworzyć sugestie to: ${categoryLabel}\n\nKontekst:\n${context}`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4o-mini", // Use the specified model
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userPrompt }
+                        ],
+                        temperature: 0.7, // Adjust creativity as needed
+                        max_tokens: 150 // Limit response length
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("OpenAI API Error:", errorData);
+                    throw new Error(`Błąd API OpenAI: ${response.status} ${response.statusText}. ${errorData.error?.message || ''}`);
+                }
+
+                const data = await response.json();
+                if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+                    const suggestion = data.choices[0].message.content.trim();
+                    targetElement.value = suggestion;
+                    showToast(`Sugestia dla "${categoryLabel}" wygenerowana pomyślnie.`, 'success');
+                } else {
+                    throw new Error('Nie otrzymano poprawnej odpowiedzi od API.');
+                }
+
+            } catch (error) {
+                console.error('Błąd podczas pobierania sugestii AI:', error);
+                showToast(`Nie udało się pobrać sugestii: ${error.message}`, 'danger');
+            } finally {
+                 button.disabled = false;
+                 button.innerHTML = originalButtonText;
+            }
+        }
+
+         // --- Test API Connection ---
+        async function testOpenAIConnection() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                showToast('Proszę wprowadzić klucz API OpenAI.', 'warning');
+                apiStatusSpan.textContent = 'Brak klucza';
+                apiStatusSpan.className = 'badge bg-warning text-dark';
+                return;
+            }
+
+            apiStatusSpan.textContent = 'Testowanie...';
+            apiStatusSpan.className = 'badge bg-info text-dark';
+            testConnectionBtn.disabled = true;
+
+             try {
+                // Simple test: list models (low cost) or a very short completion
+                const response = await fetch('https://api.openai.com/v1/models', { // Changed to models endpoint for a lighter test
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`
+                    }
+                });
+
+                 if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({})); // Catch JSON parse error if body is not JSON
+                    throw new Error(`Błąd: ${response.status} ${response.statusText}. ${errorData.error?.message || 'Sprawdź klucz API i połączenie.'}`);
+                 }
+
+                // Check if response looks valid (optional, depends on endpoint)
+                 const data = await response.json();
+                 if (!data || !data.data) { // Check structure of models response
+                    throw new Error('Otrzymano nieoczekiwaną odpowiedź od API.');
+                 }
+
+                apiStatusSpan.textContent = 'Połączono';
+                apiStatusSpan.className = 'badge bg-success';
+                showToast('Połączenie z API OpenAI pomyślne!', 'success');
+
+            } catch (error) {
+                console.error('Błąd testowania połączenia API:', error);
+                apiStatusSpan.textContent = 'Błąd';
+                apiStatusSpan.className = 'badge bg-danger';
+                showToast(`Błąd połączenia: ${error.message}`, 'danger');
+            } finally {
+                 testConnectionBtn.disabled = false;
+            }
+        }
+
+        // --- Save Canvas (JSON) ---
+        function saveCanvasToJson() {
+            if (!validateRequiredFields()) {
+                return;
+            }
+
+            const canvasData = {};
+            allInputIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    canvasData[id] = element.value;
+                }
+            });
+
+            // Include API Key if needed (optional, usually not saved)
+            // canvasData['openai-api-key'] = apiKeyInput.value;
+
+            const jsonString = JSON.stringify(canvasData, null, 2); // Pretty print JSON
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            saveAs(blob, 'canvas.data.json'); // From FileSaver.js
+            showToast('Kanwa zapisana jako canvas.data.json', 'success');
+        }
+
+        // --- Load Canvas (JSON) ---
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const canvasData = JSON.parse(e.target.result);
+                    allInputIds.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element && canvasData.hasOwnProperty(id)) {
+                            element.value = canvasData[id];
+                            element.classList.remove('is-invalid'); // Clear validation state on load
+                        }
+                    });
+                     // Load API key if it was saved (check if needed)
+                    // if (canvasData['openai-api-key']) {
+                    //    apiKeyInput.value = canvasData['openai-api-key'];
+                    // }
+                    showToast('Kanwa załadowana pomyślnie.', 'success');
+                     // Reset file input value to allow loading the same file again
+                     loadCanvasInput.value = null;
+                } catch (error) {
+                    console.error('Błąd podczas ładowania pliku JSON:', error);
+                    showToast(`Nie udało się załadować pliku: ${error.message}`, 'danger');
+                     loadCanvasInput.value = null;
+                }
+            };
+            reader.onerror = function(e) {
+                 console.error('Błąd odczytu pliku:', e);
+                 showToast('Wystąpił błąd podczas odczytu pliku.', 'danger');
+                 loadCanvasInput.value = null;
+            }
+            reader.readAsText(file);
+        }
+
+        // --- Save as DOCX ---
+        function saveCanvasToDocx() {
+             if (!validateRequiredFields()) {
+                return;
+            }
+
+            const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
+
+            const sections = []; // Array to hold all paragraphs and headings
+
+            // Helper to add section heading and content
+            const addSection = (level, title, contentId, label) => {
+                 sections.push(new Paragraph({ heading: level, children: [new TextRun(title)] }));
+                 const element = document.getElementById(contentId);
+                 const content = element ? element.value.trim() : 'Brak danych';
+                 // Split content by newlines and create paragraphs
+                 const lines = content.split('\n');
+                 lines.forEach(line => {
+                     if (line.trim()) { // Add non-empty lines
+                        // Basic Markdown interpretation (Bold and Italic) - can be expanded
+                        const children = [];
+                        const parts = line.split(/(\*\*.*?\*\*|\*.*?\*)/g); // Split by bold/italic markers
+                        parts.forEach(part => {
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                                children.push(new TextRun({ text: part.slice(2, -2), bold: true }));
+                            } else if (part.startsWith('*') && part.endsWith('*')) {
+                                children.push(new TextRun({ text: part.slice(1, -1), italics: true }));
+                            } else if (part) {
+                                children.push(new TextRun(part));
+                            }
+                        });
+                         sections.push(new Paragraph({ children: children.length > 0 ? children : [new TextRun(" ")] })); // Add space if line was just whitespace after split
+                     }
+                 });
+                 sections.push(new Paragraph(" ")); // Add spacing between sections
+            };
+
+            const addSimpleField = (label, contentId) => {
+                const element = document.getElementById(contentId);
+                const content = element ? element.value.trim() : 'Brak danych';
+                sections.push(new Paragraph({
+                    children: [
+                        new TextRun({ text: `${label}: `, bold: true }),
+                        new TextRun(content)
+                    ]
+                }));
+            };
+
+             // --- Build Document Content ---
+            sections.push(new Paragraph({ heading: HeadingLevel.HEADING_1, children: [new TextRun("AI Product Canvas")] }));
+            sections.push(new Paragraph(" ")); // Spacing
+
+            // 1. Definicja Rozwiązania
+            sections.push(new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun("1. Definicja Rozwiązania")] }));
+            addSimpleField("Nazwa rozwiązania", "nazwa-rozwiazania");
+            addSimpleField("Właściciel", "wlasciciel");
+            addSection(HeadingLevel.HEADING_3, "Krótki opis rozwiązania", "krotki-opis");
+            sections.push(new Paragraph(" "));
+
+             // 2. Aspekty Biznesowe i Użytkownik
+            sections.push(new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun("2. Aspekty Biznesowe i Użytkownik")] }));
+             // Problem i wartość biznesowa
+            addSection(HeadingLevel.HEADING_3, "Problem biznesowy i oczekiwane rezultaty", "problem-biznesowy");
+            addSection(HeadingLevel.HEADING_3, "Wartość biznesowa", "wartosc-biznesowa");
+            addSection(HeadingLevel.HEADING_3, "Możliwe przeszkody", "mozliwe-przeszkody");
+             // Dane
+            addSection(HeadingLevel.HEADING_3, "Dostępność i źródła danych", "dostepnosc-danych");
+             // Użytkownicy
+            addSection(HeadingLevel.HEADING_3, "Grupy użytkowników i ich potrzeby", "uzytkownicy-potrzeby");
+             // Działanie i mierniki
+            addSection(HeadingLevel.HEADING_3, "Kluczowe funkcjonalności", "kluczowe-funkcjonalnosci");
+            addSection(HeadingLevel.HEADING_3, "Mierniki sukcesu (KPI)", "mierniki-sukcesu");
+            sections.push(new Paragraph(" "));
+
+             // 3. Aspekty Technologiczne
+            sections.push(new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun("3. Aspekty Technologiczne")] }));
+             // Dane i modele
+            addSection(HeadingLevel.HEADING_3, "Modele AI i techniki", "modele-ai");
+            addSection(HeadingLevel.HEADING_3, "Ocena i walidacja modeli", "ocena-modeli");
+             // Infrastruktura i bezpieczeństwo
+            addSection(HeadingLevel.HEADING_3, "Infrastruktura", "infrastruktura");
+            addSection(HeadingLevel.HEADING_3, "Bezpieczeństwo i prywatność", "bezpieczenstwo");
+             // UX
+            addSection(HeadingLevel.HEADING_3, "Interfejs i interakcja", "interfejs-ux");
+             // Rozwój
+            addSection(HeadingLevel.HEADING_3, "Zespół i metodologia", "zespol-metodologia");
+            addSection(HeadingLevel.HEADING_3, "Plan wdrożenia i utrzymania", "plan-wdrozenia");
+
+            // --- Create and Save Document ---
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: sections
+                }]
+            });
+
+            Packer.toBlob(doc).then(blob => {
+                saveAs(blob, "AI_Product_Canvas.docx");
+                showToast('Dokument DOCX wygenerowany pomyślnie.', 'success');
+            }).catch(error => {
+                 console.error('Błąd podczas generowania DOCX:', error);
+                 showToast('Nie udało się wygenerować pliku DOCX.', 'danger');
+            });
+        }
+
+
+        // --- Event Listeners ---
+        testConnectionBtn.addEventListener('click', testOpenAIConnection);
+        saveCanvasBtn.addEventListener('click', saveCanvasToJson);
+        saveDocxBtn.addEventListener('click', saveCanvasToDocx);
+
+        // Trigger hidden file input when "Wczytaj Kanwe" is clicked
+        loadCanvasBtn.addEventListener('click', () => {
+            loadCanvasInput.click();
+        });
+
+        // Handle file selection for loading
+        loadCanvasInput.addEventListener('change', handleFileLoad);
+
+        // Add listeners to all suggestion buttons
+        suggestionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const label = button.getAttribute('data-label');
+                getOpenAISuggestion(targetId, label, button);
+            });
+        });
+
+         // Add input event listeners to clear validation errors on typing
+         allInputIds.forEach(id => {
+             const element = document.getElementById(id);
+             if (element) {
+                 element.addEventListener('input', () => {
+                     if (element.classList.contains('is-invalid')) {
+                         element.classList.remove('is-invalid');
+                     }
+                 });
+             }
+         });
+
+        // --- Initial Setup ---
+        // (Optional: Load saved API key from localStorage if desired)
+        // const savedApiKey = localStorage.getItem('openaiApiKey');
+        // if (savedApiKey) {
+        //    apiKeyInput.value = savedApiKey;
+        //    testOpenAIConnection(); // Optionally test on load
+        // }
+        // apiKeyInput.addEventListener('change', () => {
+        //    localStorage.setItem('openaiApiKey', apiKeyInput.value);
+        // });
+
+    </script>
 </body>
 </html>
