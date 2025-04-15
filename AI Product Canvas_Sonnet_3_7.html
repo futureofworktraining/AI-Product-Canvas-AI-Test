@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Canvas</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- DOCX libraries -->
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+
+    <style>
+        .tab-content {
+            padding: 20px;
+        }
+        .section-header {
+            color: #6f42c1;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-suggest {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .btn-suggest:hover {
+            background-color: #5a32a3;
+            color: white;
+        }
+        .nav-link.active {
+            background-color: #6f42c1 !important;
+            color: white !important;
+        }
+        .nav-link {
+            color: #6f42c1;
+        }
+        .icon-label {
+            color: #6f42c1;
+            margin-right: 10px;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">AI Product Canvas</h1>
+
+        <!-- Toast container -->
+        <div class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+        <!-- API Key Input -->
+        <div class="mb-4">
+            <div class="input-group">
+                <input type="password" class="form-control" id="apiKey" placeholder="Klucz API OpenAI">
+                <button class="btn btn-outline-secondary" type="button" id="testConnection">Test połączenia</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="definition-tab" data-bs-toggle="tab" data-bs-target="#definition" type="button" role="tab">
+                    Definicja Rozwiązania
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="business-tab" data-bs-toggle="tab" data-bs-target="#business" type="button" role="tab">
+                    Aspekty Biznesowe i Użytkownik
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="technical-tab" data-bs-toggle="tab" data-bs-target="#technical" type="button" role="tab">
+                    Aspekty Technologiczne
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Definicja Rozwiązania Tab -->
+            <div class="tab-pane fade show active" id="definition" role="tabpanel">
+                <h3 class="section-header">Podstawowe Informacje o rozwiązaniu</h3>
+                
+                <div class="form-group">
+                    <label><i class="bi bi-bookmark icon-label"></i>Nazwa rozwiązania</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="solutionName">
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Nazwa rozwiązania')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="bi bi-person icon-label"></i>Właściciel</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="owner">
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Właściciel')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="bi bi-file-text icon-label"></i>Krótki opis rozwiązania</label>
+                    <div class="input-group">
+                        <textarea class="form-control" id="description" rows="3"></textarea>
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Krótki opis rozwiązania')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </div>
+                    <small class="text-muted">Możesz używać składni markdown (np. **pogrubienie**, *kursywa*)</small>
+                </div>
+            </div>
+
+            <!-- Aspekty Biznesowe Tab -->
+            <div class="tab-pane fade" id="business" role="tabpanel">
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-graph-up icon-label"></i>Problem i wartość biznesowa
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Problem i wartość biznesowa')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="businessProblem" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-database icon-label"></i>Dane
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Dane')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="data" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-people icon-label"></i>Użytkownicy
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Użytkownicy')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="users" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-gear icon-label"></i>Działanie rozwiązania i mierniki sukcesu
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Działanie rozwiązania')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="solution" rows="4"></textarea>
+                </div>
+            </div>
+
+            <!-- Aspekty Technologiczne Tab -->
+            <div class="tab-pane fade" id="technical" role="tabpanel">
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-cpu icon-label"></i>Dane i modele
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Dane i modele')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="dataModels" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-shield-lock icon-label"></i>Infrastruktura i bezpieczeństwo
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Infrastruktura i bezpieczeństwo')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="infrastructure" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-window icon-label"></i>Interfejs użytkownika (UX)
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Interfejs użytkownika')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="ux" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="section-header">
+                        <i class="bi bi-code-square icon-label"></i>Rozwój aplikacji
+                        <button class="btn btn-suggest" onclick="generateSuggestion('Rozwój aplikacji')">
+                            <i class="bi bi-magic"></i> Sugestia AI
+                        </button>
+                    </h4>
+                    <textarea class="form-control" id="development" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-2 mt-4 mb-4">
+            <button class="btn btn-outline-secondary" onclick="loadCanvas()">
+                <i class="bi bi-upload"></i> Wczytaj Kanwę
+            </button>
+            <button class="btn btn-primary" onclick="saveCanvas()">
+                <i class="bi bi-download"></i> Zapisz Kanwę
+            </button>
+            <button class="btn btn-success" onclick="saveAsDocx()">
+                <i class="bi bi-file-earmark-word"></i> Zapisz jako DOCX
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Funkcja pokazująca toast
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastHtml = `
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header bg-${type} text-white">
+                        <strong class="me-auto">AI Product Canvas</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            toastContainer.innerHTML = toastHtml;
+            const toastElement = toastContainer.querySelector('.toast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        // Funkcja testująca połączenie z API
+        async function testConnection() {
+            const apiKey = document.getElementById('apiKey').value;
+            if (!apiKey) {
+                showToast('Wprowadź klucz API!', 'danger');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{role: "user", content: "Test"}],
+                        temperature: 0.7
+                    })
+                });
+
+                if (response.ok) {
+                    showToast('Połączenie z API działa poprawnie!', 'success');
+                } else {
+                    const errorData = await response.json();
+                    showToast('Błąd połączenia z API: ' + errorData.error.message, 'danger');
+                }
+            } catch (error) {
+                showToast('Błąd połączenia z API: ' + error.message, 'danger');
+            }
+        }
+
+        // Funkcja generująca sugestie AI
+        async function generateSuggestion(category) {
+            const apiKey = document.getElementById('apiKey').value;
+            if (!apiKey) {
+                showToast('Wprowadź klucz API!', 'danger');
+                return;
+            }
+
+            const context = {
+                'Nazwa rozwiązania': document.getElementById('solutionName').value,
+                'Właściciel': document.getElementById('owner').value,
+                'Krótki opis rozwiązania': document.getElementById('description').value,
+                'Problem i wartość biznesowa': document.getElementById('businessProblem').value,
+                'Dane': document.getElementById('data').value,
+                'Użytkownicy': document.getElementById('users').value,
+                'Działanie rozwiązania': document.getElementById('solution').value,
+                'Dane i modele': document.getElementById('dataModels').value,
+                'Infrastruktura i bezpieczeństwo': document.getElementById('infrastructure').value,
+                'Interfejs użytkownika': document.getElementById('ux').value,
+                'Rozwój aplikacji': document.getElementById('development').value
+            };
+
+            const systemPrompt = "Jesteś business analitykiem tworzącym specyfikację rozwiązania.";
+            const userPrompt = `Kategoria dla której powinien utworzyć sugestie to: ${category}\nKontekst: ${JSON.stringify(context)}`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            {role: "system", content: systemPrompt},
+                            {role: "user", content: userPrompt}
+                        ],
+                        temperature: 0.7
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const suggestion = data.choices[0].message.content;
+                    
+                    // Uzupełnij odpowiednie pole tekstowe sugestią
+                    switch(category) {
+                        case 'Nazwa rozwiązania':
+                            document.getElementById('solutionName').value = suggestion;
+                            break;
+                        case 'Właściciel':
+                            document.getElementById('owner').value = suggestion;
+                            break;
+                        case 'Krótki opis rozwiązania':
+                            document.getElementById('description').value = suggestion;
+                            break;
+                        case 'Problem i wartość biznesowa':
+                            document.getElementById('businessProblem').value = suggestion;
+                            break;
+                        case 'Dane':
+                            document.getElementById('data').value = suggestion;
+                            break;
+                        case 'Użytkownicy':
+                            document.getElementById('users').value = suggestion;
+                            break;
+                        case 'Działanie rozwiązania':
+                            document.getElementById('solution').value = suggestion;
+                            break;
+                        case 'Dane i modele':
+                            document.getElementById('dataModels').value = suggestion;
+                            break;
+                        case 'Infrastruktura i bezpieczeństwo':
+                            document.getElementById('infrastructure').value = suggestion;
+                            break;
+                        case 'Interfejs użytkownika':
+                            document.getElementById('ux').value = suggestion;
+                            break;
+                        case 'Rozwój aplikacji':
+                            document.getElementById('development').value = suggestion;
+                            break;
+                    }
+                    
+                    showToast('Sugestia została wygenerowana!', 'success');
+                } else {
+                    const errorData = await response.json();
+                    showToast('Błąd podczas generowania sugestii: ' + errorData.error.message, 'danger');
+                }
+            } catch (error) {
+                showToast('Błąd: ' + error.message, 'danger');
+            }
+        }
+
+        // Funkcja zapisująca kanwę
+        function saveCanvas() {
+            const canvasData = {
+                solutionName: document.getElementById('solutionName').value,
+                owner: document.getElementById('owner').value,
+                description: document.getElementById('description').value,
+                businessProblem: document.getElementById('businessProblem').value,
+                data: document.getElementById('data').value,
+                users: document.getElementById('users').value,
+                solution: document.getElementById('solution').value,
+                dataModels: document.getElementById('dataModels').value,
+                infrastructure: document.getElementById('infrastructure').value,
+                ux: document.getElementById('ux').value,
+                development: document.getElementById('development').value
+            };
+
+            if (!canvasData.solutionName || !canvasData.owner || !canvasData.description) {
+                showToast('Wypełnij wszystkie wymagane pola!', 'danger');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(canvasData)], {type: 'application/json'});
+            saveAs(blob, 'canvas.data.json');
+            showToast('Kanwa została zapisana!', 'success');
+        }
+
+        // Funkcja wczytująca kanwę
+        function loadCanvas() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = JSON.parse(e.target.result);
+                    document.getElementById('solutionName').value = data.solutionName || '';
+                    document.getElementById('owner').value = data.owner || '';
+                    document.getElementById('description').value = data.description || '';
+                    document.getElementById('businessProblem').value = data.businessProblem || '';
+                    document.getElementById('data').value = data.data || '';
+                    document.getElementById('users').value = data.users || '';
+                    document.getElementById('solution').value = data.solution || '';
+                    document.getElementById('dataModels').value = data.dataModels || '';
+                    document.getElementById('infrastructure').value = data.infrastructure || '';
+                    document.getElementById('ux').value = data.ux || '';
+                    document.getElementById('development').value = data.development || '';
+                    showToast('Kanwa została wczytana!', 'success');
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Funkcja zapisująca jako DOCX
+        function saveAsDocx() {
+            const solutionName = document.getElementById('solutionName').value;
+            const owner = document.getElementById('owner').value;
+            const description = document.getElementById('description').value;
+            
+            if (!solutionName || !owner || !description) {
+                showToast('Wypełnij wszystkie wymagane pola!', 'danger');
+                return;
+            }
+
+            const doc = new docx.Document({
+                sections: [{
+                    properties: {},
+                    children: [
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "AI Product Canvas",
+                                    bold: true,
+                                    size: 40,
+                                })
+                            ],
+                            alignment: docx.AlignmentType.CENTER
+                        }),
+                        
+                        // 1. Definicja Rozwiązania
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\n1. Definicja Rozwiązania",
+                                    bold: true,
+                                    size: 28,
+                                    color: "#6f42c1"
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nNazwa: ",
+                                    bold: true
+                                }),
+                                new docx.TextRun(solutionName)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nWłaściciel: ",
+                                    bold: true
+                                }),
+                                new docx.TextRun(owner)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nOpis: ",
+                                    bold: true
+                                }),
+                                new docx.TextRun(description)
+                            ]
+                        }),
+                        
+                        // 2. Aspekty Biznesowe i Użytkownicy
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\n\n2. Aspekty Biznesowe i Użytkownicy",
+                                    bold: true,
+                                    size: 28,
+                                    color: "#6f42c1"
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nProblem i Wartość biznesowa",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('businessProblem').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nDane",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('data').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nUżytkownicy",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('users').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nDziałanie rozwiązania i mierniki sukcesu",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('solution').value)
+                            ]
+                        }),
+                        
+                        // 3. Aspekty Technologiczne
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\n\n3. Aspekty Technologiczne",
+                                    bold: true,
+                                    size: 28,
+                                    color: "#6f42c1"
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nDane i modele",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('dataModels').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nInfrastruktura i bezpieczeństwo",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('infrastructure').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nInterfejs użytkownika (UX)",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('ux').value)
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun({
+                                    text: "\nRozwój aplikacji",
+                                    bold: true
+                                })
+                            ]
+                        }),
+                        
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(document.getElementById('development').value)
+                            ]
+                        })
+                    ]
+                }]
+            });
+
+            docx.Packer.toBlob(doc).then(blob => {
+                console.log(blob);
+                saveAs(blob, "AI_Product_Canvas.docx");
+                console.log("Document created successfully");
+                showToast('Dokument DOCX został utworzony!', 'success');
+            });
+        }
+
+        // Dodaj event listener dla przycisku testowania połączenia
+        document.getElementById('testConnection').addEventListener('click', testConnection);
+    </script>
+</body>
+</html>
