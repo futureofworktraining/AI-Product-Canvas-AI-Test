@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Canvas</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .nav-tabs .nav-link {
+            color: var(--bs-primary);
+        }
+        .nav-tabs .nav-link.active {
+            color: #495057;
+            background-color: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        .card-header h5 {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+        .card-header i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--bs-primary);
+        }
+        .btn-ai-suggest {
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            margin-left: 1rem; /* Add space between header and button */
+        }
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .api-key-section {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .toast-container {
+             z-index: 1090; /* Ensure toast is above other elements */
+        }
+        label {
+            font-weight: 500;
+        }
+        .action-buttons {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+        }
+        .action-buttons .btn {
+            margin: 0 0.5rem;
+        }
+         /* Ensure button is vertically aligned with header text */
+        .card-header .d-flex {
+            width: 100%;
+            align-items: center;
+        }
+         .card-header .ms-auto {
+            margin-left: auto !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-primary text-white p-3 mb-4 shadow-sm">
+        <div class="container-fluid">
+            <h1 class="h4 mb-0"><i class="bi bi-lightbulb-fill me-2"></i>AI Product Canvas</h1>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+
+        <!-- API Key Section -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label for="openai-api-key" class="form-label"><i class="bi bi-key-fill"></i> Klucz API OpenAI</label>
+                <input type="password" class="form-control" id="openai-api-key" placeholder="Wprowadź swój klucz API OpenAI">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-secondary w-100" id="test-connection-btn" type="button"><i class="bi bi-plug-fill me-1"></i>Test połączenia</button>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs mb-3" id="canvasTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="definicja-tab" data-bs-toggle="tab" data-bs-target="#definicja-pane" type="button" role="tab" aria-controls="definicja-pane" aria-selected="true"><i class="bi bi-pencil-square me-1"></i>Definicja Rozwiązania</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="biznes-tab" data-bs-toggle="tab" data-bs-target="#biznes-pane" type="button" role="tab" aria-controls="biznes-pane" aria-selected="false"><i class="bi bi-briefcase-fill me-1"></i>Aspekty Biznesowe i Użytkownik</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="technologia-tab" data-bs-toggle="tab" data-bs-target="#technologia-pane" type="button" role="tab" aria-controls="technologia-pane" aria-selected="false"><i class="bi bi-gear-fill me-1"></i>Aspekty Technologiczne</button>
+            </li>
+        </ul>
+
+        <!-- Tabs Content -->
+        <div class="tab-content" id="canvasTabsContent">
+
+            <!-- Tab 1: Definicja Rozwiązania -->
+            <div class="tab-pane fade show active" id="definicja-pane" role="tabpanel" aria-labelledby="definicja-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                             <h5 class="mb-0"><i class="bi bi-tag-fill"></i>Nazwa rozwiązania</h5>
+                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="nazwa-rozwiazania" data-category-name="Nazwa rozwiązania"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" id="nazwa-rozwiazania" placeholder="Podaj nazwę projektu/rozwiązania AI">
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                             <h5 class="mb-0"><i class="bi bi-person-badge-fill"></i>Właściciel</h5>
+                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="wlasciciel" data-category-name="Właściciel"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" id="wlasciciel" placeholder="Kto jest głównym właścicielem biznesowym/produktowym?">
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                             <h5 class="mb-0"><i class="bi bi-file-text-fill"></i>Krótki opis rozwiązania</h5>
+                             <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="krotki-opis" data-category-name="Krótki opis rozwiązania"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="krotki-opis" rows="4" placeholder="Opisz w kilku zdaniach, czym jest rozwiązanie i co robi."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Aspekty Biznesowe i Użytkownik -->
+            <div class="tab-pane fade" id="biznes-pane" role="tabpanel" aria-labelledby="biznes-tab">
+                <div class="card">
+                     <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                           <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i>Problem i wartość biznesowa</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="problem-wartosc" data-category-name="Problem i wartość biznesowa"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                       </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="problem-wartosc" rows="4" placeholder="Jaki problem rozwiązuje AI? Jaką wartość biznesową przynosi (np. oszczędność czasu, redukcja kosztów, nowe możliwości)?"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                           <h5 class="mb-0"><i class="bi bi-clipboard-data-fill"></i>Dane</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dane-biznesowe" data-category-name="Dane (Biznesowe)"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="dane-biznesowe" rows="4" placeholder="Jakie dane są potrzebne z perspektywy biznesowej? Skąd pochodzą? Czy są dostępne? Jakie są ograniczenia (np. RODO)?"></textarea>
+                    </div>
+                </div>
+
+                 <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                           <h5 class="mb-0"><i class="bi bi-people-fill"></i>Użytkownicy</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="uzytkownicy" data-category-name="Użytkownicy"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="uzytkownicy" rows="4" placeholder="Kim są główni użytkownicy rozwiązania? Jakie są ich potrzeby i oczekiwania wobec AI?"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                           <h5 class="mb-0"><i class="bi bi-graph-up-arrow"></i>Działanie rozwiązania i mierniki sukcesu</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dzialanie-mierniki" data-category-name="Działanie rozwiązania i mierniki sukcesu"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="dzialanie-mierniki" rows="4" placeholder="Jak użytkownik będzie interagował z rozwiązaniem? Jakie kroki wykonuje AI? Jakie są kluczowe wskaźniki efektywności (KPI) i jak będą mierzone?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Aspekty Technologiczne -->
+            <div class="tab-pane fade" id="technologia-pane" role="tabpanel" aria-labelledby="technologia-tab">
+                <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                            <h5 class="mb-0"><i class="bi bi-database-fill-gear"></i>Dane i modele</h5>
+                            <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="dane-modele" data-category-name="Dane i modele"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="dane-modele" rows="4" placeholder="Jakie dane techniczne są potrzebne do trenowania/działania modelu AI? Jaki typ modelu AI jest rozważany (np. klasyfikacja, regresja, NLP, generatywne)? Czy potrzebny jest pre-trening, fine-tuning?"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                            <h5 class="mb-0"><i class="bi bi-hdd-stack-fill"></i>Infrastruktura i bezpieczeństwo</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="infrastruktura-bezpieczenstwo" data-category-name="Infrastruktura i bezpieczeństwo"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="infrastruktura-bezpieczenstwo" rows="4" placeholder="Gdzie będzie hostowane rozwiązanie (chmura, on-premise)? Jakie są wymagania sprzętowe/software'owe? Jakie środki bezpieczeństwa danych i modelu zostaną zastosowane?"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                         <div class="d-flex justify-content-between align-items-center w-100">
+                            <h5 class="mb-0"><i class="bi bi-palette-fill"></i>Interfejs użytkownika (UX)</h5>
+                           <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="interfejs-ux" data-category-name="Interfejs użytkownika (UX)"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="interfejs-ux" rows="4" placeholder="Jak będzie wyglądał interfejs użytkownika? Jak AI będzie prezentować wyniki/sugestie? Jakie mechanizmy feedbacku od użytkownika są planowane?"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <h5 class="mb-0"><i class="bi bi-code-slash"></i>Rozwój aplikacji</h5>
+                            <button class="btn btn-outline-primary btn-sm btn-ai-suggest" data-target-id="rozwoj-aplikacji" data-category-name="Rozwój aplikacji"><i class="bi bi-magic me-1"></i>Sugestia AI</button>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="rozwoj-aplikacji" rows="4" placeholder="Jakie technologie (języki programowania, frameworki) będą użyte? Jakie są plany dotyczące testowania, wdrażania (CI/CD) i monitorowania aplikacji oraz modelu AI?"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+             <input type="file" id="importFile" accept=".json" style="display: none;">
+             <button class="btn btn-info text-white" id="load-canvas-btn" type="button"><i class="bi bi-upload me-1"></i>Wczytaj Kanwę</button>
+             <button class="btn btn-success" id="save-canvas-btn" type="button"><i class="bi bi-save-fill me-1"></i>Zapisz Kanwę</button>
+             <button class="btn btn-primary" id="save-docx-btn" type="button"><i class="bi bi-file-earmark-word-fill me-1"></i>Zapisz jako DOCX</button>
+        </div>
+
+    </div> <!-- /container-fluid -->
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Toasts will be added here -->
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- docx library -->
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <!-- FileSaver.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const apiKeyInput = document.getElementById('openai-api-key');
+            const testConnectionBtn = document.getElementById('test-connection-btn');
+            const saveCanvasBtn = document.getElementById('save-canvas-btn');
+            const loadCanvasBtn = document.getElementById('load-canvas-btn');
+            const saveDocxBtn = document.getElementById('save-docx-btn');
+            const importFileInput = document.getElementById('importFile');
+            const toastContainer = document.querySelector('.toast-container');
+
+            // --- Toast Notification Function ---
+            function showToast(message, type = 'info') {
+                const toastId = 'toast-' + Date.now();
+                let bgClass = 'bg-info';
+                let iconClass = 'bi-info-circle-fill';
+                if (type === 'success') {
+                    bgClass = 'bg-success';
+                    iconClass = 'bi-check-circle-fill';
+                } else if (type === 'error') {
+                    bgClass = 'bg-danger';
+                    iconClass = 'bi-exclamation-triangle-fill';
+                } else if (type === 'warning') {
+                     bgClass = 'bg-warning';
+                     iconClass = 'bi-exclamation-triangle-fill';
+                }
+
+
+                const toastHtml = `
+                    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="bi ${iconClass} me-2"></i>
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+                toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+                const toastElement = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastElement);
+
+                toastElement.addEventListener('hidden.bs.toast', () => {
+                    toastElement.remove();
+                });
+
+                toast.show();
+            }
+
+            // --- Collect Canvas Data ---
+            function getCanvasData() {
+                const data = {};
+                const inputs = document.querySelectorAll('.form-control[id]');
+                inputs.forEach(input => {
+                    if (input.id !== 'openai-api-key') { // Don't save API key
+                       data[input.id] = input.value;
+                    }
+                });
+                return data;
+            }
+
+             // --- Populate Canvas Data ---
+            function populateCanvas(data) {
+                const inputs = document.querySelectorAll('.form-control[id]');
+                inputs.forEach(input => {
+                    if (data.hasOwnProperty(input.id) && input.id !== 'openai-api-key') {
+                        input.value = data[input.id];
+                    } else if (input.id !== 'openai-api-key') {
+                         // Clear fields not present in the loaded data
+                         input.value = '';
+                    }
+                });
+                 showToast('Kanwa została pomyślnie wczytana.', 'success');
+            }
+
+            // --- Validation ---
+            function validateRequiredFields() {
+                const requiredIds = ['nazwa-rozwiazania', 'wlasciciel', 'krotki-opis'];
+                for (const id of requiredIds) {
+                    const field = document.getElementById(id);
+                    if (!field.value.trim()) {
+                        showToast(`Pole "${field.closest('.card').querySelector('h5').innerText}" jest wymagane.`, 'error');
+                        field.focus();
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+             // --- OpenAI API Call ---
+            async function getOpenAISuggestion(apiKey, categoryName, context) {
+                const systemPrompt = "Jesteś business analitykiem tworzącym specyfikację rozwiązania. Użytkownik poda Ci nazwę kategorii/obszar który ty uzupełnisz na podstawie dostarczonych Ci innych informacji. Dobierz sugestię do tej kategorii zgodnie z załączonym kontekstem. Zwróć tylko i wyłącznie sugestię, bez dodatkowych komentarzy, przykładów lub kontekstu. Powinno być węźle.";
+                const userPrompt = `Kategoria w dla której powinien utworzyć sugestie to: ${categoryName}\nKontekst:\n${context}`;
+                const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-4o-mini", // Use the specified model
+                            messages: [
+                                { role: "system", content: systemPrompt },
+                                { role: "user", content: userPrompt }
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('OpenAI API Error:', errorData);
+                        throw new Error(`Błąd API OpenAI: ${response.status} ${response.statusText}. ${errorData.error?.message || ''}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+                        return data.choices[0].message.content.trim();
+                    } else {
+                        throw new Error('Otrzymano nieprawidłową odpowiedź z API OpenAI.');
+                    }
+                } catch (error) {
+                    console.error("Błąd podczas wywołania API OpenAI:", error);
+                    showToast(`Błąd generowania sugestii: ${error.message}`, 'error');
+                    return null; // Indicate failure
+                }
+            }
+
+            // --- Build Context for AI ---
+             function buildAIContext() {
+                const data = getCanvasData();
+                let context = "";
+                const fieldOrder = [ // Define order for better context structure
+                    'nazwa-rozwiazania', 'wlasciciel', 'krotki-opis',
+                    'problem-wartosc', 'dane-biznesowe', 'uzytkownicy', 'dzialanie-mierniki',
+                    'dane-modele', 'infrastruktura-bezpieczenstwo', 'interfejs-ux', 'rozwoj-aplikacji'
+                ];
+
+                fieldOrder.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && data[id]?.trim()) {
+                        const labelElement = element.closest('.card').querySelector('h5');
+                        const label = labelElement ? labelElement.innerText : id.replace(/-/g, ' '); // Fallback label
+                         context += `${label}: ${data[id]}\n`;
+                    }
+                });
+
+                return context.trim() || "Brak wprowadzonych danych kontekstowych.";
+            }
+
+            // --- Event Listener: AI Suggestion Buttons ---
+            document.querySelectorAll('.btn-ai-suggest').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const apiKey = apiKeyInput.value.trim();
+                    if (!apiKey) {
+                        showToast('Wprowadź Klucz API OpenAI w odpowiednim polu.', 'warning');
+                        apiKeyInput.focus();
+                        return;
+                    }
+
+                    const targetId = button.dataset.targetId;
+                    const categoryName = button.dataset.categoryName;
+                    const targetTextarea = document.getElementById(targetId);
+
+                    if (!targetTextarea) {
+                        console.error(`Nie znaleziono elementu docelowego o ID: ${targetId}`);
+                        showToast('Wystąpił błąd wewnętrzny aplikacji.', 'error');
+                        return;
+                    }
+
+                    const context = buildAIContext();
+
+                    // Add loading indicator
+                    button.disabled = true;
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generowanie...';
+
+                    try {
+                         const suggestion = await getOpenAISuggestion(apiKey, categoryName, context);
+                         if (suggestion !== null) { // Check if suggestion was successful
+                            targetTextarea.value = suggestion;
+                            showToast(`Sugestia dla "${categoryName}" została wygenerowana.`, 'success');
+                         }
+                         // If suggestion is null, the error toast was already shown in getOpenAISuggestion
+                    } catch (error) {
+                        // Error already handled and shown in getOpenAISuggestion
+                        console.error("Error caught in button listener:", error);
+                    } finally {
+                        // Restore button state
+                         button.disabled = false;
+                         button.innerHTML = '<i class="bi bi-magic me-1"></i>Sugestia AI';
+                    }
+                });
+            });
+
+             // --- Event Listener: Test Connection ---
+            testConnectionBtn.addEventListener('click', async () => {
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    showToast('Wprowadź Klucz API OpenAI, aby przetestować połączenie.', 'warning');
+                    apiKeyInput.focus();
+                    return;
+                }
+
+                testConnectionBtn.disabled = true;
+                testConnectionBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Testowanie...';
+
+                // Simple test: Ask for a very short, predictable response
+                 try {
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                             'Authorization': `Bearer ${apiKey}`
+                         },
+                         body: JSON.stringify({
+                             model: "gpt-4o-mini",
+                             messages: [{ role: "user", content: "Powiedz 'test'" }],
+                             max_tokens: 5
+                         })
+                     });
+
+                     if (response.ok) {
+                         const data = await response.json();
+                         // Basic check if response seems valid
+                         if (data.choices && data.choices.length > 0) {
+                             showToast('Połączenie z API OpenAI jest poprawne.', 'success');
+                         } else {
+                             throw new Error('Otrzymano nieoczekiwaną odpowiedź od API.');
+                         }
+                     } else {
+                          const errorData = await response.json();
+                          console.error('Test Connection Error:', errorData);
+                          throw new Error(`Błąd ${response.status}: ${errorData.error?.message || response.statusText}`);
+                     }
+                 } catch (error) {
+                     console.error("Błąd podczas testowania połączenia:", error);
+                     showToast(`Test połączenia nie powiódł się: ${error.message}`, 'error');
+                 } finally {
+                     testConnectionBtn.disabled = false;
+                     testConnectionBtn.innerHTML = '<i class="bi bi-plug-fill me-1"></i>Test połączenia';
+                 }
+            });
+
+            // --- Event Listener: Save Canvas (JSON) ---
+            saveCanvasBtn.addEventListener('click', () => {
+                if (!validateRequiredFields()) {
+                    return;
+                }
+                const data = getCanvasData();
+                const jsonData = JSON.stringify(data, null, 2); // Pretty print JSON
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                saveAs(blob, 'canvas.data.json');
+                showToast('Kanwa została zapisana jako canvas.data.json.', 'success');
+            });
+
+             // --- Event Listener: Load Canvas Button ---
+            loadCanvasBtn.addEventListener('click', () => {
+                importFileInput.click(); // Trigger hidden file input
+            });
+
+             // --- Event Listener: File Input Change (for loading) ---
+             importFileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+                if (file.type !== 'application/json') {
+                    showToast('Nieprawidłowy format pliku. Wybierz plik .json.', 'error');
+                    importFileInput.value = ''; // Reset file input
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const loadedData = JSON.parse(e.target.result);
+                        populateCanvas(loadedData);
+                    } catch (error) {
+                        console.error("Błąd podczas parsowania pliku JSON:", error);
+                        showToast('Nie udało się wczytać pliku. Sprawdź format JSON.', 'error');
+                    } finally {
+                         importFileInput.value = ''; // Reset file input after processing
+                    }
+                };
+                 reader.onerror = () => {
+                    showToast('Nie udało się odczytać pliku.', 'error');
+                    importFileInput.value = ''; // Reset file input
+                };
+                reader.readAsText(file);
+            });
+
+
+            // --- Event Listener: Save as DOCX ---
+             saveDocxBtn.addEventListener('click', () => {
+                if (!validateRequiredFields()) {
+                    return;
+                }
+                generateDocx();
+            });
+
+             // --- DOCX Generation Function ---
+            function generateDocx() {
+                const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
+                const data = getCanvasData();
+                const sectionsData = [
+                    { title: "Definicja Rozwiązania", fields: ['nazwa-rozwiazania', 'wlasciciel', 'krotki-opis'], icon: "bi-pencil-square" },
+                    { title: "Aspekty Biznesowe i Użytkownik", fields: ['problem-wartosc', 'dane-biznesowe', 'uzytkownicy', 'dzialanie-mierniki'], icon: "bi-briefcase-fill" },
+                    { title: "Aspekty Technologiczne", fields: ['dane-modele', 'infrastruktura-bezpieczenstwo', 'interfejs-ux', 'rozwoj-aplikacji'], icon: "bi-gear-fill" }
+                ];
+
+                const docChildren = [];
+
+                // Add main title
+                docChildren.push(new Paragraph({
+                    text: "AI Product Canvas",
+                    heading: HeadingLevel.TITLE,
+                    alignment: docx.AlignmentType.CENTER,
+                     spacing: { after: 200 }
+                }));
+
+
+                 sectionsData.forEach(section => {
+                    // Section Title
+                    docChildren.push(new Paragraph({
+                         children: [
+                             new TextRun({ text: section.title, bold: true, size: 28 }) // size is in half-points (14pt)
+                         ],
+                         heading: HeadingLevel.HEADING_1,
+                         spacing: { before: 300, after: 150 },
+                         border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } } // Add bottom border
+                    }));
+
+                     section.fields.forEach(fieldId => {
+                        const element = document.getElementById(fieldId);
+                        const labelElement = element?.closest('.card')?.querySelector('h5');
+                        const labelText = labelElement ? labelElement.innerText.trim() : fieldId.replace(/-/g, ' ');
+                        const value = data[fieldId] || '';
+
+                        // Field Label (Heading 2 style)
+                         docChildren.push(new Paragraph({
+                             children: [
+                                 new TextRun({ text: labelText, bold: true, size: 24 }) // 12pt
+                             ],
+                              heading: HeadingLevel.HEADING_2,
+                              spacing: { before: 200, after: 100 }
+                         }));
+
+                         // Field Value - handle multiline text from textareas
+                         const valueLines = value.split('\n');
+                         valueLines.forEach(line => {
+                             docChildren.push(new Paragraph({
+                                 children: [
+                                     new TextRun({ text: line, size: 22 }) // 11pt
+                                 ],
+                                 indent: { left: 720 }, // Indent content (optional) - 720 twips = 0.5 inch
+                                 spacing: { after: 50 }
+                             }));
+                         });
+                         // Add extra space after the value block if it's not empty
+                         if (value.trim()) {
+                              docChildren.push(new Paragraph({ spacing: { after: 100 } }));
+                         }
+                    });
+                });
+
+                const doc = new Document({
+                    sections: [{
+                        properties: {},
+                        children: docChildren
+                    }]
+                });
+
+                 Packer.toBlob(doc).then(blob => {
+                    saveAs(blob, "AI_Product_Canvas.docx");
+                    showToast('Dokument DOCX został wygenerowany.', 'success');
+                    console.log("Document created successfully");
+                }).catch(error => {
+                     console.error("Błąd podczas generowania DOCX:", error);
+                     showToast('Wystąpił błąd podczas generowania pliku DOCX.', 'error');
+                 });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
