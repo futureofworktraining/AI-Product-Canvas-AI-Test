@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Canvas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjAvpDwiPUiKdW5Sm/BaZ9JtzFlrCi6Z2Y2HiBrOd7aL1XRO+m5Od/OAcWk8NkTr1eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/openai@latest/dist/randomIndex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <style>
+        .ai-suggestion-button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Solution Definition</h2>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="solutionName">Solution Name:</label>
+                        <input type="text" id="solutionName" class="form-control" placeholder="Enter Solution Name">
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('solutionName')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="owner">Owner:</label>
+                        <input type="text" id="owner" class="form-control" placeholder="Enter Owner">
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('owner')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="shortDescription">Short Description of the Solution:</label>
+                        <textarea id="shortDescription" class="form-control" rows="4" placeholder="Enter Short Description"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('shortDescription')">AI Suggestion</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="apiKey">OpenAI API Key:</label>
+                    <input type="password" id="apiKey" class="form-control" placeholder="Enter API Key">
+                </div>
+                <button class="btn btn-primary mt-2" onclick="testConnection()">Test Connection</button>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Business and User Aspects</h2>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="problemAndValue">Problem and Business Value:</label>
+                        <textarea id="problemAndValue" class="form-control" rows="4" placeholder="Enter Problem and Business Value"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('problemAndValue')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="data">Data:</label>
+                        <textarea id="data" class="form-control" rows="4" placeholder="Enter Data Requirements"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('data')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="users">Users:</label>
+                        <textarea id="users" class="form-control" rows="4" placeholder="Enter User Personas"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('users')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="successMetrics">Solution Operation and Success Metrics:</label>
+                        <textarea id="successMetrics" class="form-control" rows="4" placeholder="Enter Success Metrics"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('successMetrics')">AI Suggestion</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Technological Aspects</h2>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="dataModels">Data and Models:</label>
+                        <textarea id="dataModels" class="form-control" rows="4" placeholder="Enter Data and Model Details"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('dataModels')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="infrastructureSecurity">Infrastructure and Security:</label>
+                        <textarea id="infrastructureSecurity" class="form-control" rows="4" placeholder="Enter Infrastructure and Security Details"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('infrastructureSecurity')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ux">User Interface (UX):</label>
+                        <textarea id="ux" class="form-control" rows="4" placeholder="Enter UX Considerations"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('ux')">AI Suggestion</button>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="applicationDevelopment">Application Development:</label>
+                        <textarea id="applicationDevelopment" class="form-control" rows="4" placeholder="Enter Application Development Details"></textarea>
+                        <button class="btn btn-primary ai-suggestion-button" onclick="generateSuggestion('applicationDevelopment')">AI Suggestion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <button class="btn btn-primary" onclick="loadCanvas()">Load Canvas</button>
+                <button class="btn btn-primary" onclick="saveCanvas()">Save Canvas</button>
+                <button class="btn btn-primary" onclick="saveAsDocx()">Save as DOCX</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openai = new OpenAI();
+
+        function generateSuggestion(fieldId) {
+            const apiKeyInput = document.getElementById('apiKey');
+            const field = document.getElementById(fieldId);
+            if (!apiKeyInput.value) {
+                alert('Please enter your OpenAI API Key.');
+                return;
+            }
+
+            const prompt = `You are a business analyst creating a solution specification. The user will provide the name of the category/area for which you will fill in based on other provided information. Match the suggestion to that category according to the attached context. Return only and exclusively the suggestion, without additional comments, examples, or context.`;
+
+            if (fieldId === 'solutionName') {
+                prompt += `Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${field.value}`;
+            } else if (fieldId === 'owner') {
+                prompt += `Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${field.value} Short Description of the Solution: ${document.getElementById('shortDescription').value}`;
+            } else if (fieldId === 'shortDescription') {
+                prompt += `Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${field.value}`;
+            } else if (fieldId === 'problemAndValue') {
+                prompt += `Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Problem and Business Value: ${field.value}`;
+            } else if (fieldId === 'data') {
+                prompt += `Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Data: ${field.value}`;
+            } else if (fieldId === 'users') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Users: ${field.value};
+            } else if (fieldId === 'successMetrics') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Solution Operation and Success Metrics: ${field.value};
+            } else if (fieldId === 'dataModels') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Data and Models: ${field.value};
+            } else if (fieldId === 'infrastructureSecurity') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Infrastructure and Security: ${field.value};
+            } else if (fieldId === 'ux') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} User Interface (UX): ${field.value};
+            } else if (fieldId === 'applicationDevelopment') {
+            prompt += Context: Solution Name: ${apiKeyInput.value} Solution Name: ${field.value} Owner: ${document.getElementById('owner').value} Short Description of the Solution: ${document.getElementById('shortDescription').value} Application Development: ${field.value};
+            }
+          try {
+            const response = await openai.completions.create({
+                model: "gpt-4o-mini",
+                prompt: prompt,
+                max_tokens: 100,
+            });
+            const suggestion = response.choices[0].text.trim();
+            document.getElementById(fieldId).value = suggestion;
+        } catch (error) {
+            document.getElementById(fieldId).value = 'Error generating suggestion. Please check your API key and internet connection.';
+            console.error(error);
+        }
+    }
+
+    function testConnection() {
+        const apiKey = document.getElementById('apiKey').value;
+        if (apiKey) {
+            openai.apiKey = apiKey;
+            console.log('API connection test successful.');
+        } else {
+            alert('Please enter your OpenAI API Key.');
+        }
+    }
+
+    function loadCanvas() {
+        // Placeholder for loading a canvas. In a real application, this would fetch a JSON or DOCX file.
+        alert('Loading canvas... (Implementation missing)');
+    }
+
+    function saveCanvas() {
+        const canvasData = {
+            solutionName: document.getElementById('solutionName').value,
+            owner: document.getElementById('owner').value,
+            shortDescription: document.getElementById('shortDescription').value,
+            problemAndValue: document.getElementById('problemAndValue').value,
+            data: document.getElementById('data').value,
+            users: document.getElementById('users').value,
+            successMetrics: document.getElementById('successMetrics').value,
+            dataModels: document.getElementById('dataModels').value,
+            infrastructureSecurity: document.getElementById('infrastructureSecurity').value,
+            ux: document.getElementById('ux').value,
+            applicationDevelopment: document.getElementById('applicationDevelopment').value,
+        };
+
+        const jsonData = JSON.stringify(canvasData, null, 2);
+        localStorage.setItem('canvasData', jsonData);
+        alert('Canvas saved successfully!');
+    }
+
+    function saveAsDocx() {
+        const canvasData = {
+            solutionName: document.getElementById('solutionName').value,
+            owner: document.getElementById('owner').value,
+            shortDescription: document.getElementById('shortDescription').value,
+            problemAndValue: document.getElementById('problemAndValue').value,
+            data: document.getElementById('data').value,
+            users: document.getElementById('users').value,
+            successMetrics: document.getElementById('successMetrics').value,
+            dataModels: document.getElementById('dataModels').value,
+            infrastructureSecurity: document.getElementById('infrastructureSecurity').value,
+            ux: document.getElementById('ux').value,
+            applicationDevelopment: document.getElementById('applicationDevelopment').value,
+        };
+
+        const docxData = await docx.Document.create({
+            sections: [{
+                properties: {
+                    pageWidth: 612,
+                    pageHeight: 792,
+                    margin: { top: 10, right: 10, bottom: 10, left: 10 }
+                },
+                children: [
+                    new docx.Paragraph({ children: [new docx.TextRun("AI Product Canvas")] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("Version: " + new Date().toLocaleDateString())] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("--- Solution Definition ---")] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.solutionName)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("Owner: " + canvasData.owner)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("Short Description: " + canvasData.shortDescription)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("--- Business and User Aspects ---")] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.problemAndValue)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.data)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.users)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.successMetrics)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun("--- Technological Aspects ---")] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.dataModels)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.infrastructureSecurity)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.ux)] }),
+                    new docx.Paragraph({ children: [new docx.TextRun(canvasData.applicationDevelopment)] }),
+                ]
+            }]
+        });
+
+        const blob = docxData.toBlob();
+        FileSaver.saveAs(blob, "ai_product_canvas.docx");
+        alert('Canvas saved as DOCX successfully!');
+    }
+</script>
+</body>
+</html>
